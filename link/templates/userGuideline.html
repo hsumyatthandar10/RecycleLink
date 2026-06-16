@@ -1,0 +1,204 @@
+{% extends 'footer.html' %}
+
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guidelines</title>
+    <link rel="stylesheet" href="{% static 'css/guidelines.css' %}">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #ffffff;
+            --heading-color: #213F1B;
+            --bg-color: #F5F5F5;
+            --highlight-color: #ffbb33;
+            --text-color: #333;
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --button-hover-color: #45a049;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding:  100px 50px 30px;
+            text-align: center;
+        }
+
+        .guidelines-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 8px var(--card-shadow);
+            border-radius: 8px;
+        }
+
+        .guidelines-container h1 {
+            font-size: 2.5rem;
+            color: var(--heading-color);
+            margin-bottom: 20px;
+        }
+
+        .guideline-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .guideline-step .step-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--highlight-color);
+            color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            margin-right: 20px;
+        }
+
+        .guideline-step .step-content {
+            max-width: 900px;
+        }
+
+        .guideline-step h3 {
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .guideline-step p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .important-box {
+            background-color: #fbe4b2;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 5px solid var(--highlight-color);
+            font-weight: bold;
+            color: var(--heading-color);
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .button-container a {
+            text-decoration: none;
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border-radius: 5px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container a:hover {
+            background-color: var(--button-hover-color);
+        }
+
+        @media (max-width: 768px) {
+            .guidelines-container {
+                padding: 30px;
+            }
+
+            .guideline-step {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .guideline-step .step-icon {
+                margin-bottom: 15px;
+            }
+
+            .guideline-step .step-content {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Welcome to Our User Guidelines</h1>
+    <p>Follow these simple steps to get started and make the most out of your experience!</p>
+</header>
+
+<div class="guidelines-container">
+    <h1>User Guidelines</h1>
+    
+    <!-- Step 1 -->
+    <div class="guideline-step">
+        <div class="step-icon">1</div>
+        <div class="step-content">
+            <h3>Sign Up</h3>
+            <p>To start using the platform, you'll need to create an account. Click on the "Sign Up" button, fill in your details, and you're all set!</p>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="guideline-step">
+        <div class="step-icon">2</div>
+        <div class="step-content">
+            <h3>Complete Your Profile</h3>
+            <p>Fill out your profile with relevant information. Upload a profile picture to make your account look complete and more engaging.</p>
+        </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="guideline-step">
+        <div class="step-icon">3</div>
+        <div class="step-content">
+            <h3>Browse Products</h3>
+            <p>Explore the wide variety of products we offer. Use filters to narrow down your search and find exactly what you're looking for.</p>
+        </div>
+    </div>
+
+    <!-- Important Note -->
+    <div class="important-box">
+        <p><strong>Important:</strong> Make sure to verify your email after signing up to complete the registration process and gain full access to your account.</p>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="guideline-step">
+        <div class="step-icon">4</div>
+        <div class="step-content">
+            <h3>Add Items to Cart</h3>
+            <p>Once you've found the items you like, add them to your cart. You can review your cart before proceeding to checkout.</p>
+        </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="guideline-step">
+        <div class="step-icon">5</div>
+        <div class="step-content">
+            <h3>Checkout</h3>
+            <p>When you're ready to buy, proceed to the checkout page. Add your payment details and place the order.</p>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a href="{% url 'home' %}">Go Back to Homepage</a>
+    </div>
+</div>
+
+</body>
+</html>
+
+{% endblock %}

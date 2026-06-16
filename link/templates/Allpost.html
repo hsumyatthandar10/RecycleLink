@@ -1,0 +1,310 @@
+{% extends 'footer.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Posts - Social Feed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            
+        }
+        .post-container {
+            background-color: rgb(232, 234, 222);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 70px 0 20px 200px;
+            max-width: 500px;
+        }
+        h1{
+            margin-top: 100px;
+            margin-left: 100px;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+            color: black;
+        }
+        .post-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .post-header h4 {
+            margin: 0;
+            font-size: 20px;
+        }
+        .post-content {
+            margin: 15px 0 20px 20px;
+            font-size: 18px;
+        }
+        .post-content p {
+            margin-bottom: 20px;
+        }
+       
+        .post-content img {
+            width: 200px; 
+            height: 200px;
+            border-radius: 5px;
+        }
+        .actions {
+            display: flex;
+            gap: 30px;
+        }
+        .action-button {
+            cursor: pointer;
+            font-size: 25px;
+        }
+        .action-button.like {
+            color: gray;
+        }
+        .action-button.like.liked {
+            color: red;
+        }
+        .comment-box {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .comment-box textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            resize: none;
+        }
+        .comment .delete-comment {
+            cursor: pointer;
+            margin-left: 100px;
+             margin-bottom: 20px;
+            color: red;
+            font-weight: bold;
+        }
+        .share-box {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        .go-home-btn {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            padding: 10px 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: rgb(192, 155, 155);
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .go-home-btn:hover {
+            background-color: rgba(30, 33, 105, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'profile' %}" class="go-home-btn">
+        <i class="fas fa-arrow-left"></i> 
+    </a>
+    <h1>All Posts</h1>
+    <div id="postsContainer"></div>
+    
+    <script>
+       // Render posts from localStorage (all posts saved under keys starting with "posts_")
+       function renderPosts() {
+            const postsContainer = document.getElementById("postsContainer");
+            postsContainer.innerHTML = "";
+            let allPosts = [];
+
+            // Iterate through localStorage keys to collect posts from all users
+            for (let key in localStorage) {
+                if (key.startsWith("posts_")) {
+                    const username = key.replace("posts_", "");
+                    let userPosts = JSON.parse(localStorage.getItem(key)) || [];
+                    userPosts.forEach(post => {
+                        allPosts.push({
+                            username: username,
+                            profilePhoto: localStorage.getItem("profilePhoto_" + username) || "{% static 'img/profile.jpg' %}",
+                            text: post.text,
+                            images: post.images,
+                            anonymous: post.anonymous,
+                            liked: post.liked || false,
+                            comments: post.comments || []  // Array of comments
+                        });
+                    });
+                }
+            }
+
+            allPosts.forEach((post, index) => {
+                const postElement = document.createElement("div");
+                postElement.classList.add("post-container");
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <img src="${post.profilePhoto}" alt="Profile Picture">
+                        <h4>${post.anonymous ? "Anonymous" : post.username}</h4>
+                    </div>
+                    <div class="post-content">
+                        <p>${post.text}</p>
+                        ${post.images.map(img => `<img src="${img}" alt="Post Image">`).join("")}
+                    </div>
+                    <div class="actions">
+                        <span class="action-button like ${post.liked ? 'liked' : ''}" onclick="toggleLike(this, ${index})"><i class="fas fa-heart"></i></span>
+                        <span class="action-button comment" onclick="toggleCommentBox(${index})">📬 </span>
+                       
+                    </div>
+                    <div class="comment-box" id="commentBox-${index}">
+                        <div id="comments-${index}">
+                            ${post.comments.map((c, cIndex) => `
+                                <div class="comment">
+                                    <span>${c}</span>
+                                    <span class="delete-comment" onclick="deleteComment(${index}, ${cIndex})">&times;</span>
+                                </div>
+                            `).join("")}
+                        </div>
+                        <textarea placeholder="Write a comment..." id="commentText-${index}"></textarea>
+                        <button onclick="saveComment(${index})">💾</button>
+                    </div>
+                    <div class="share-box" id="shareBox-${index}">
+                        <p>Shared by you: <span>${post.text}</span></p>
+                    </div>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        }
+
+        // Toggle like status and update localStorage
+       // Toggle like status and update localStorage
+function toggleLike(target, postIndex) {
+    let allPosts = [];
+    for (let key in localStorage) {
+        if (key.startsWith("posts_")) {
+            const username = key.replace("posts_", "");
+            let userPosts = JSON.parse(localStorage.getItem(key)) || [];
+            userPosts.forEach(post => {
+                allPosts.push({
+                    username: username,
+                    post: post,
+                    key: key
+                });
+            });
+        }
+    }
+    const targetPost = allPosts[postIndex];
+    if (targetPost) {
+        // Toggle the like status
+        targetPost.post.liked = !targetPost.post.liked;
+
+        // Toggle the heart color based on the like status
+        if (targetPost.post.liked) {
+            target.classList.add('liked');
+        } else {
+            target.classList.remove('liked');
+        }
+
+        let userPosts = JSON.parse(localStorage.getItem(targetPost.key)) || [];
+        userPosts = userPosts.map(p => {
+            if (p.id === targetPost.post.id) {
+                return targetPost.post;
+            }
+            return p;
+        });
+        localStorage.setItem(targetPost.key, JSON.stringify(userPosts));
+    }
+}
+
+
+
+
+
+        // Toggle comment box visibility
+        function toggleCommentBox(postIndex) {
+            const commentBox = document.getElementById(`commentBox-${postIndex}`);
+            commentBox.style.display = commentBox.style.display === "block" ? "none" : "block";
+        }
+
+        // Save a new comment and update localStorage
+        function saveComment(postIndex) {
+            const commentText = document.getElementById(`commentText-${postIndex}`).value;
+            if(commentText.trim() === "") return;
+            let allPosts = [];
+            for (let key in localStorage) {
+                if (key.startsWith("posts_")) {
+                    const username = key.replace("posts_", "");
+                    let userPosts = JSON.parse(localStorage.getItem(key)) || [];
+                    userPosts.forEach(post => {
+                        allPosts.push({
+                            username: username,
+                            post: post,
+                            key: key
+                        });
+                    });
+                }
+            }
+            const target = allPosts[postIndex];
+            target.post.comments = target.post.comments || [];
+            target.post.comments.push(commentText);
+            // Update localStorage for that user
+            let userPosts = JSON.parse(localStorage.getItem(target.key)) || [];
+            userPosts = userPosts.map(p => {
+                if (p.text === target.post.text && p.images.toString() === target.post.images.toString()) {
+                    return target.post;
+                }
+                return p;
+            });
+            localStorage.setItem(target.key, JSON.stringify(userPosts));
+            renderPosts();
+        }
+
+        // Delete a comment and update localStorage
+        function deleteComment(postIndex, commentIndex) {
+            let allPosts = [];
+            for (let key in localStorage) {
+                if (key.startsWith("posts_")) {
+                    const username = key.replace("posts_", "");
+                    let userPosts = JSON.parse(localStorage.getItem(key)) || [];
+                    userPosts.forEach(post => {
+                        allPosts.push({
+                            username: username,
+                            post: post,
+                            key: key
+                        });
+                    });
+                }
+            }
+            const target = allPosts[postIndex];
+            if (target.post.comments) {
+                target.post.comments.splice(commentIndex, 1);
+            }
+            let userPosts = JSON.parse(localStorage.getItem(target.key)) || [];
+            userPosts = userPosts.map(p => {
+                if (p.text === target.post.text && p.images.toString() === target.post.images.toString()) {
+                    return target.post;
+                }
+                return p;
+            });
+            localStorage.setItem(target.key, JSON.stringify(userPosts));
+            renderPosts();
+        }
+
+
+        // Load posts when page loads
+        window.onload = renderPosts;
+    </script>
+</body>
+</html>
+
+{% endblock %}

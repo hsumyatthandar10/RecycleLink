@@ -1,0 +1,1320 @@
+{% extends 'footer.html' %}
+
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About us</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/aboutus.css'%}" />
+  <style>
+    :root {
+      --primary: #E2DEA8;
+      --black: #000000;
+      --green: #213F1B;
+      --white: #FFFF;
+      --pgreen: #63E88D;
+      --linecolor: #B39B24;
+      --bgcolor: #E8F5E9;
+      --grey: #555;
+
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: all .5s;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    /* navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--primary);
+      padding: 10px 20px;
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .navbar .logo img {
+      height: 4rem;
+      width: 7rem;
+    }
+
+    .navbar nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar nav ul li a {
+      text-decoration: none;
+      color: var(--black);
+      font-weight: bold;
+      padding: 0 2rem;
+    }
+
+    .navbar nav ul li a:hover {
+      color: var(--green);
+      font-size: 20px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 3rem;
+    }
+
+    .actions input {
+      padding: 7px;
+      border: 3px solid var(--white);
+      border-radius: 8px;
+    }
+
+    .actions .language-btn,
+    .actions .people-btn,
+    .actions .heart,
+    .actions .shop {
+      background-color: transparent;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0 .5rem;
+    }
+
+    /*aboutUsHead*/
+    .aboutUs {
+      position: relative;
+      text-align: center;
+      height: 39rem;
+      padding: 15rem 27rem;
+      background-image: url("{% static 'img/p53.jpg' %}");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .aboutUs::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .aboutUs_content {
+      position: relative;
+      z-index: 1;
+
+    }
+
+    .aboutUs_content h1 {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: var(--bgcolor);
+    }
+
+    .aboutUs_content p {
+      font-size: 1.2rem;
+      font-weight: bold;
+      line-height: 1.5;
+      color: var(--white);
+    }
+
+    /*what we do*/
+    .section {
+      padding: 60px 40px;
+    }
+
+    .section h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin: 20px 0;
+      color: var(--black);
+    }
+
+    .whatwedo_p {
+      text-align: center;
+      max-width: 50rem;
+      margin: 0 auto;
+      color: var(--grey);
+    }
+
+    .cards-container {
+      display: flex;
+      justify-content: center;
+      gap: 8rem;
+      flex-wrap: wrap;
+      padding-top: 3rem;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+      overflow: hidden;
+      transition: transform 0.5s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+    }
+
+    .card .p1 {
+      height: 12.5rem;
+    }
+
+    .card-content {
+      padding: 20px;
+    }
+
+    .card-content h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .title-do .TITLE {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .card-content p {
+      color: var(--grey);
+      margin-bottom: 15px;
+    }
+
+    .card-content a {
+      text-decoration: none;
+      color: var(--pgreen);
+      font-weight: bold;
+    }
+
+    /*Why choose us*/
+    .features-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 15rem;
+      flex-wrap: wrap;
+    }
+
+    .feature {
+      text-align: center;
+      max-width: 200px;
+    }
+
+    .section .features-container {
+      padding: 2rem;
+    }
+
+    .feature img {
+      width: 80px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .feature h4 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .feature p {
+      color: var(--grey);
+    }
+
+    .highlight {
+      display: inline-block;
+      padding: 0 5px;
+    }
+
+    /*team section*/
+    .team-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 45rem;
+    }
+
+    .team-title {
+      font-size: 2rem;
+      color: var(--green);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .team-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 0 5rem;
+    }
+
+    .team-member {
+      display: flex;
+      align-items: center;
+      background-color: var(--white);
+      border-radius: 10px;
+      box-shadow: 2px 4px 6px rgba(0.1, 0.1, 0.1, 0.1);
+      padding: 20px 120px;
+    }
+
+    .image-container {
+      flex-shrink: 0;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 20px;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 1px solid #FFC0CB;
+    }
+
+    .member-info {
+      flex: 1;
+    }
+
+    .member-info h2 {
+      font-size: 1.5rem;
+      color: var(--pgreen);
+      margin-bottom: 10px;
+    }
+
+    .member-info p {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    /*service section*/
+    .serviceTitle {
+      font-size: 2.1rem;
+    }
+
+    .services-section {
+      height: 25rem;
+    }
+
+    .services-section .serviceTitle {
+      color: var(--green);
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .services-container {
+      display: flex;
+      justify-content: center;
+      gap: 100px;
+      margin-top: 30px;
+    }
+
+    .service-card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 270px;
+      text-align: center;
+    }
+
+    .service-card img {
+      width: 50px;
+      height: 50px;
+      margin: 1.5rem 1rem;
+
+    }
+
+    .service-card h3 {
+      color: orangered;
+      font-size: 1.3rem;
+    }
+
+    .service-card a {
+      display: block;
+      margin-top: 10px;
+      text-decoration: none;
+      color: purple;
+      font-weight: bold;
+    }
+
+    /*review section*/
+    .reviews-header .reviewtitle {
+      font-size: 2.5rem;
+      color: var(--green);
+      text-align: center;
+    }
+
+    .reviews-header .reviewpara {
+      text-align: center;
+      color: var(--grey);
+    }
+
+    .reviews-section {
+      padding: 40px 70px;
+      background-color: var(--white);
+      margin-bottom: 3rem;
+    }
+
+    .reviews-header h2 {
+      margin-bottom: 10px;
+    }
+
+    .reviews-header p {
+      font-size: 1rem;
+      color: #777;
+      max-width: 700px;
+      margin: 0 auto;
+
+    }
+
+    .reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Ensures 3 columns */
+  gap: 20px;
+  margin-top: 30px;
+  padding: 0 7rem;
+}
+
+
+
+    .review-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+
+    .review-card blockquote {
+      margin: 0 0 20px 0;
+      font-style: italic;
+      color: #555;
+      position: relative;
+    }
+
+    .review-card blockquote::before {
+      content: '“';
+      font-size: 3rem;
+      color: #ff8c00;
+      position: absolute;
+      top: -20px;
+      left: -10px;
+    }
+
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+    }
+
+    .review-author img {
+      width: 50px;
+      height: 60px;
+      border-radius: 70%;
+      object-fit: cover;
+
+
+    }
+
+    .review-author h4 {
+      margin: 0;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .stars {
+      font-size: 0.9rem;
+      color: var(--linecolor);
+    }
+    
+    .reviewicon {
+      font-size: 30px;
+      margin-left: 40rem;
+    }
+  
+
+
+
+    /*question section*/
+    .faq-section {
+      padding: 40px 200px 70px;
+      background-color: var(--white);
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .faq-header h2 {
+      font-size: 2rem;
+      color: var(--green);
+      margin-bottom: 1.5rem;
+    }
+
+    .faq-header p {
+      font-size: 1rem;
+      color: #555;
+      max-width: 700px;
+      margin: 0 auto 4rem;
+    }
+
+    .faq-header a {
+      color: #ff8c00;
+      text-decoration: none;
+    }
+
+    .faq-header a:hover {
+      text-decoration: underline;
+    }
+
+    .faq-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .faq-item {
+      background: var(--bgcolor);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .faq-question h4 {
+      margin: 0;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ff8c00;
+      cursor: pointer;
+    }
+
+    .faq-answer {
+      margin-top: 10px;
+      display: none;
+      font-size: 0.9rem;
+      color: var(--grey);
+    }
+
+    /*number*/
+    .project {
+      background-color: var(--white);
+      height: 10rem;
+      margin-top: 2rem;
+    }
+
+    .project .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+
+    }
+
+    .project .container .item {
+      text-align: center;
+      width: 25%;
+      padding: 2rem;
+    }
+
+    .project .container .item .number {
+      font-size: 3.5rem;
+      font-weight: bold;
+    }
+
+    .project .container .item .label {
+      color: var(--gray);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+
+    /*up*/
+    #up {
+      background-color: var(--primary);
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 2.5rem;
+      border: 3px solid var(--black);
+      position: fixed;
+      right: 2rem;
+      bottom: 4rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+      .aboutUs {
+        height: auto;
+        padding: 8rem 10%;
+      }
+
+      .team-container {
+        padding: 0 2rem;
+      }
+
+      .team-member {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 30px;
+      }
+
+      .image-container {
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+
+      .services-container {
+        gap: 30px;
+      }
+
+      .service-card {
+        width: 80%;
+      }
+
+      .services-section {
+        padding: 25rem 0 25rem 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .aboutUs {
+        padding: 6rem 5%;
+      }
+
+      .aboutUs_content h1 {
+        font-size: 1.8rem;
+      }
+
+      .aboutUs_content p {
+        font-size: 1rem;
+      }
+
+      .team-section .team-container {
+        padding: 0 0 4rem;
+      }
+
+      .team-title {
+        font-size: 1.8rem;
+      }
+
+      .member-info h2 {
+        font-size: 1.3rem;
+      }
+
+      .member-info p {
+        font-size: 0.9rem;
+      }
+
+      .services-section {
+        padding: 27rem 0 60rem 0;
+      }
+
+      .services-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 5rem;
+      }
+
+      .service-card {
+        width: 90%;
+      }
+
+      .reviews-section .reviews-grid {
+        padding: 2rem 50rem 0 0;
+        grid-template-columns: repeat(2, 1fr); 
+      }
+
+      .reviews-header .reviewtitle,
+      .faq-header h2 {
+        font-size: 2rem;
+      }
+
+      .review-card {
+        padding: 1rem 0 1rem 0;
+      }
+
+      .review-card blockquote::before {
+        font-size: 2.5rem;
+
+      }
+
+      .faq-container {
+        grid-template-columns: 1fr;
+      }
+
+      .project {
+        padding: 0 0 40rem 0;
+      }
+
+      .project .container .item {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .aboutUs {
+        padding: 4rem 5%;
+      }
+
+      .aboutUs_content h1 {
+        font-size: 1.5rem;
+      }
+
+      .aboutUs_content p {
+        font-size: 0.9rem;
+      }
+
+      .team-title {
+        font-size: 1.5rem;
+      }
+
+      .team-member {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 10px;
+      }
+
+      .image-container {
+        width: 80px;
+        height: 80px;
+      }
+
+      .member-info h2 {
+        font-size: 1.2rem;
+      }
+
+      .member-info p {
+        font-size: 0.85rem;
+      }
+
+      .services-section {
+        padding: 15rem 0 60rem 0;
+      }
+
+      .serviceTitle {
+        font-size: 1.8rem;
+      }
+
+      .service-card {
+        width: 95%;
+        padding: 15px;
+      }
+
+      .reviews-section {
+        padding: 20px;
+      }
+
+      .reviews-grid {
+        grid-template-columns: 1fr 1fr;
+        /* Single column layout */
+
+        padding: 40%;
+      }
+
+      .review-card {
+        padding: 15px;
+      }
+
+      .review-author img {
+        width: 40px;
+        height: 50px;
+      }
+
+      .faq-section {
+        padding: 20px 15px;
+        /* Reduce side padding */
+      }
+
+      .faq-header h2 {
+        font-size: 1.5rem;
+        /* Reduce title size */
+      }
+
+      .faq-header p {
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+        /* Adjust spacing */
+      }
+
+      .faq-container {
+        grid-template-columns: 1fr;
+        /* Make it a single column layout */
+        gap: 15px;
+      }
+
+      .faq-item {
+        padding: 15px;
+        /* Reduce padding */
+      }
+
+      .faq-question h4 {
+        font-size: 0.95rem;
+        /* Reduce question size */
+      }
+
+      .toggle-btn {
+        font-size: 1.2rem;
+        /* Adjust button size */
+      }
+
+      .faq-answer {
+        font-size: 0.85rem;
+        /* Reduce text size */
+      }
+    }
+
+    @media (max-width: 626px) {
+      .faq-section {
+        padding: 20px 15px;
+        /* Reduce side padding */
+      }
+
+      .faq-header h2 {
+        font-size: 1.5rem;
+        /* Reduce title size */
+      }
+
+      .faq-header p {
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+        /* Adjust spacing */
+      }
+
+      .faq-container {
+        grid-template-columns: 1fr;
+        /* Make it a single column layout */
+        gap: 15px;
+      }
+
+      .faq-item {
+        padding: 15px;
+        /* Reduce padding */
+      }
+
+      .faq-question h4 {
+        font-size: 0.95rem;
+        /* Reduce question size */
+      }
+
+      .toggle-btn {
+        font-size: 1.2rem;
+        /* Adjust button size */
+      }
+
+      .faq-answer {
+        font-size: 0.85rem;
+        /* Reduce text size */
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!--AboutUsHead-->
+  <section class="aboutUs">
+    <div class="aboutUs_content">
+      <h1>About Us</h1>
+      <p>To be a leading platform in Myanmar that empowers individuals and businesses to reduce waste, repurpose
+        materials, and contribute to a healthier environment.</p>
+    </div>
+  </section>
+  <!--What we do-->
+  <section class="section">
+    <h2>What we do</h2>
+    <p class="whatwedo_p">RecycleLink is a comprehensive solution for recycling and reusing materials. We offer
+      three main services:</p>
+    <div class="cards-container">
+      <div class="card">
+        <img src="{% static 'img/a2.jpg'%}" alt="Buying Recyclables" class="p1">
+        <div class="title-do">
+          <h2 class="TITLE">Buying Recyclables</h2>
+        </div>
+        <div class="card-content">
+
+          <p>We purchase recyclable items like plastic bags, bottles, and paper and ensure proper recycling.
+          </p>
+          <a href="{% url 'buy' %}">View Products →</a>
+        </div>
+      </div>
+      <div class="card">
+        <img src="{% static 'img/a3.jpg'%}" alt="Selling Recycled Products">
+        <div class="card-content">
+          <h3>Selling Recycled Products</h3>
+          <p>Explore a wide range of products made from recycled materials to support sustainable living.</p>
+          <a href="{% url 'buy' %}">View Products →</a>
+        </div>
+      </div>
+      <div class="card">
+        <img src="{% static 'img/a4.jpg'%}" alt="Connecting Communities">
+        <div class="card-content">
+          <h3>Connecting Communities</h3>
+          <p>Our platform allows users to post about recyclable materials they want to sell or buy.</p>
+          <a href="{% url 'buy' %}">View Products →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--Why choose us-->
+  <section class="section">
+    <h2>Why Choose Us?</h2>
+    <div class="features-container">
+
+      <div class="feature">
+        <img src="{% static 'img/a5-Photoroom.png'%}" alt="Sustainability First" class="feature">
+        <h4>Sustainability First</h4>
+        <p>We are committed to reducing waste and promoting eco-friendly practices.</p>
+      </div>
+      <div class="feature">
+        <img src="{% static 'img/a6-Photoroom.png'%}" alt="Convenient Solutions">
+        <h4><span class="highlight">Convenient Solutions</span></h4>
+        <p>With delivery services and easy communication, we make recycling effortless.</p>
+      </div>
+      <div class="feature">
+        <img src="{% static 'img/a7-Photoroom.png'%}" alt="Empowering Communities">
+        <h4>Empowering Communities</h4>
+        <p>RecycleLink connects people who care about the environment, encouraging collective action.</p>
+      </div>
+    </div>
+  </section>
+  <!--Team Section-->
+  <section class="team-section">
+    <h1 class="team-title">The Teams</h1>
+    <div class="team-container">
+      <!-- Team Member 1 -->
+      <div class="team-member">
+        <div class="image-container">
+          <img src="{% static 'img/m1.jpg'%}" alt="Khin Myat Thu">
+        </div>
+        <div class="member-info">
+          <h2>Khin Myat Thu</h2>
+          <p>
+            Khin Myat Thu is the project manager of Recycle Link. He ensures that all operations run smoothly, manages
+            the team, and oversees the platform’s development. With a strong background in project management and
+            environmental sustainability, he is committed to making recycling accessible and beneficial for everyone.
+          </p>
+        </div>
+      </div>
+
+      <!-- Team Member 2 -->
+      <div class="team-member">
+        <div class="image-container">
+          <img src="{% static 'img/m2.jpg'%}" alt="Lin Lae Phyu">
+        </div>
+        <div class="member-info">
+          <h2>Lin Lae Phyu</h2>
+          <p>
+            Lin Lae Phyu is the lead developer at Recycle Link. He is responsible for building and maintaining the
+            website, ensuring a user-friendly experience for buyers and sellers. His expertise in web development and
+            database management helps keep the platform running efficiently.
+
+
+          </p>
+        </div>
+      </div>
+
+      <!-- Team Member 3 -->
+      <div class="team-member">
+        <div class="image-container">
+          <img src="{% static 'img/m3.jpg'%}" alt="Hsu Myat Thandar">
+        </div>
+        <div class="member-info">
+          <h2>Hsu Myat Thandar</h2>
+          <p>
+            Hsu Myat Thandar is responsible for marketing and customer support at Recycle Link. She promotes the
+            platform, engages with users, and helps resolve customer inquiries. She also manages social media campaigns
+            and educates the community on the benefits of recycling.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--Setvice Section-->
+  <section class="services-section">
+    <h2 class="serviceTitle">Our Services</h2>
+    <div class="services-container">
+      <div class="service-card">
+        <h3>Video</h3>
+        <img src="{% static 'img/a11-Photoroom.png'%}" alt="Video Tutorials">
+
+        <p>Learn how to apply for different occasions...</p>
+        <a href="{% url 'video_view' %}">Read More</a>
+      </div>
+      <div class="service-card">
+        <h3>News Articles</h3>
+        <img src="{% static 'img/a12-Photoroom.png'%}" alt="News Articles">
+
+        <p>Learn how to apply for different occasions...</p>
+        <a href="{% url 'sell' %}">Read More</a>
+      </div>
+      <div class="service-card">
+        <h3>Community</h3>
+        <img src="{% static 'img/a13-Photoroom.png'%}" alt="Community">
+
+        <p>Learn how to apply for different occasions...</p>
+        <a href="{% url 'contactus' %}">Read More</a>
+      </div>
+    </div>
+  </section>
+  <!--review section-->
+  <section class="reviews-section">
+    <div class="reviews-header">
+      <h2 class="reviewtitle">Customer Reviews</h2>
+      <p class="reviewpara">We have been developing tour booking WordPress themes since 2015, here are some reviews from
+        our customers.</p>
+      <div class="reviewicon"><a href="{% url 'review' %}">📝</a></div>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <blockquote>
+          <p>Your project effectively promotes recycling by making it easy for users to sell recyclables and buy recycled products.</p>
+        </blockquote>
+        <div class="review-author">
+          <img src="{% static 'img/profile.jpg' %}" alt="Soe Moe Naing">
+          <div>
+            <h4>Soe Moe Naing</h4>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <blockquote>
+          <p>The platform is well-structured, allowing smooth transactions between sellers and buyers of recyclable items.</p>
+        </blockquote>
+        <div class="review-author">
+          <img src="{% static 'img/profile.jpg' %}" alt="Pann Pann">
+          <div>
+            <h4>Pann Pann</h4>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <blockquote>
+          <p>This project encourages sustainability by connecting people who want to recycle with those who seek eco-friendly products.</p>
+        </blockquote>
+        <div class="review-author">
+          <img src="{% static 'img/profile.jpg' %}" alt="Nay">
+          <div>
+            <h4>Nay</h4>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+    
+     
+    </div>
+
+
+  </section>
+  <!--question section-->
+  <section class="faq-section">
+    <div class="faq-header">
+      <h2>Frequently Asked Questions and Resources</h2>
+      <p>Do you have questions about the package? See the list below for our most frequently asked questions. If your
+        question is not listed here, then please <a href="{% url 'contactus' %}">Contact us</a>.</p>
+    </div>
+    <div class="faq-container">
+      <div class="faq-column">
+        <div class="faq-item">
+          <div class="faq-question">
+            <h4>What is Recycle Link?</h4>
+            <button class="toggle-btn">+</button>
+          </div>
+          <div class="faq-answer">
+            <p>Recycle Link is an online platform where users can sell recyclable materials like plastic bottles and
+              paper. Admins buy these materials, and customers can also purchase products made from recycled items.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h4>How can I sell my recyclable items?</h4>
+            <button class="toggle-btn">+</button>
+          </div>
+          <div class="faq-answer">
+            <p>Users can upload photos of their recyclable items, set a price, and submit them for admin approval. Once
+              approved, the admin will purchase the items based on their value.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h4>What kind of recycled products can I buy?</h4>
+            <button class="toggle-btn">+</button>
+          </div>
+          <div class="faq-answer">
+            <p>Customers can browse and purchase eco-friendly products made from recycled materials, such as reusable
+              bags, furniture, and decorative items.</p>
+          </div>
+        </div>
+      </div>
+      <div class="faq-column">
+        <div class="faq-item">
+          <div class="faq-question">
+            <h4>How does the payment process work?</h4>
+            <button class="toggle-btn">+</button>
+          </div>
+          <div class="faq-answer">
+            <p> Payments for sold recyclable items are credited to the user’s account. Buyers can purchase products
+              using online payment methods or cash on delivery (if available).</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h4>Is there a quality check for recyclable items?</h4>
+            <button class="toggle-btn">+</button>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, admins verify the quality and type of recyclable materials before purchasing to ensure they meet
+              recycling standards.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h4>Why should I use Recycle Link?</h4>
+            <button class="toggle-btn">+</button>
+          </div>
+          <div class="faq-answer">
+            <p> Recycle Link promotes environmental sustainability by reducing waste and encouraging the reuse of
+              materials, while also allowing users to earn money and buy eco-friendly products.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--Number section-->
+
+  <section class="project">
+    <div class="container">
+      <div class="item">
+        <p class="number" data-num="960">350</p>
+        <p class="label">Buyer</p>
+      </div>
+      <div class="item">
+        <p class="number" data-num="650">500</p>
+        <p class="label">Seller</p>
+      </div>
+      <div class="item">
+        <p class="number" data-num="750">100</p>
+        <p class="label">Items</p>
+      </div>
+      <div class="item">
+        <p class="number" data-num="850">120</p>
+        <p class="label">worked</p>
+      </div>
+
+    </div>
+
+
+  </section>
+
+ 
+  <script src="{% static 'js/aboutus.js'%}"></script>
+
+
+</body>
+<script>
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const stars = document.querySelectorAll(".star");
+    const ratingInput = document.getElementById("rating");
+    const ratingText = document.getElementById("rating-text");
+    const reviewForm = document.getElementById("reviewForm");
+    const reviewTextArea = document.getElementById("review_text");
+    const reviewsContainer = document.querySelector(".reviews-grid");
+    const userKey = "{{ user.username }}"; // Assuming this is populated by Django during page rendering
+
+
+    const messages = {
+        1: "Terrible 😞",
+        2: "Not great 😕",
+        3: "It is awesome 😄",
+        4: "Really good 😃",
+        5: "Excellent 🤩"
+    };
+
+    // ⭐ Handle star selection
+    stars.forEach(star => {
+        star.addEventListener("click", function () {
+            const value = parseInt(this.getAttribute("data-value"));
+            ratingInput.value = value;
+
+            stars.forEach(s => s.classList.remove("active"));
+            for (let i = 0; i < value; i++) {
+                stars[i].classList.add("active");
+            }
+
+            ratingText.innerText = messages[value];
+        });
+    });
+
+    // 📝 Handle review submission
+    reviewForm?.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent page reload
+
+        // ✅ Get the logged-in user's profile details
+        const username = getCurrentUsername();
+        const userImage = getProfilePhoto(username);
+        const userName = getFullName(username); // Get the full name if needed
+
+        // 🔴 Prevent review submission if no user data exists
+        if (!username || !userImage) {
+            alert("You must be logged in to submit a review.");
+            return;
+        }
+
+        const newReview = {
+            id: Date.now(),
+            rating: parseInt(ratingInput.value),
+            text: reviewTextArea.value.trim(),
+            author: userKey, // Display full name instead of just username
+            image: userImage
+        };
+
+        if (!newReview.text) {
+            alert("Review cannot be empty!");
+            return;
+        }
+
+        // Store review in localStorage
+        let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+        reviews.unshift(newReview); // Add new review at the beginning
+        localStorage.setItem("reviews", JSON.stringify(reviews));
+
+        // Refresh reviews
+        displayReviews();
+
+        // Clear form
+        reviewTextArea.value = "";
+        stars.forEach(s => s.classList.remove("active"));
+        stars[2].classList.add("active"); // Reset to default rating 3
+        ratingInput.value = 3;
+        ratingText.innerText = messages[3];
+    });
+
+   
+    function displayReviews() {
+        let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+        // ✅ Keep static HTML reviews, only remove dynamically added ones
+        reviewsContainer.querySelectorAll(".review-card.dynamic").forEach(card => card.remove());
+
+        reviews.forEach(review => {
+            const reviewCard = document.createElement("div");
+            reviewCard.classList.add("review-card", "dynamic"); // Mark as dynamic
+            reviewCard.setAttribute("data-id", review.id);
+            reviewCard.innerHTML = `
+                <blockquote>
+                    <p>${review.text}</p>
+                </blockquote>
+                <div class="review-author">
+                   <img src="${review.image}" alt="${review.username}"> 
+                    
+                    <div>
+                        
+                        {% comment %} <h4>${review.anonymous ? "Anonymous" : review.username}</h4> {% endcomment %}
+                        <h4>${review.anonymous ? "Anonymous" : userKey}</h4> 
+                        <div class="stars">${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</div>
+                    </div>
+                </div>
+                {% comment %} <button class="delete-btn" data-id="${review.id}">❌</button> {% endcomment %}
+            `;
+
+            // ✅ Prepend new review (adds it to the top)
+            reviewsContainer.appendChild(reviewCard);
+        });
+
+        // Add delete functionality
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let index = this.getAttribute("data-id");
+                deleteReview(index);
+            });
+        });
+    }
+
+    // ❌ Function to delete a review
+    function deleteReview(index) {
+        let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+        reviews = reviews.filter(review => review.id != index); // Remove by ID
+        localStorage.setItem("reviews", JSON.stringify(reviews));
+        displayReviews();
+    }
+
+    // 🎯 Run displayReviews on page load
+    displayReviews();
+
+   
+    function getCurrentUsername() {
+        const username = localStorage.getItem("username"); // Fetch the username from authentication
+        return username && username !== "null" ? username : null; // Fallback to null if username is not found
+    }
+
+    
+    function getProfilePhoto(username) {
+        const storedPhoto = localStorage.getItem("profileImage_" + username);
+        return storedPhoto && storedPhoto !== "null" ? storedPhoto : "/static/img/profile.jpg"; // Default photo if not found
+    }
+
+
+    function getFullName(username) {
+        const storedFullName = localStorage.getItem("fullName_" + username); // Assume full name is saved in localStorage
+        return storedFullName ? storedFullName : username; // Default to username if full name is not available
+    }
+});
+
+
+
+ </script>
+ 
+</html>
+{% endblock %}

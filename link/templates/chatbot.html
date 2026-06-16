@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+        #chatbot-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 20px;
+            height: 20px;
+            background: #007bff;
+            color: white;
+            text-align: center;
+            font-size: 20px;
+            line-height: 40px;
+            border-radius: 100%;
+            cursor: pointer;
+        }
+        
+        #chatbot-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            background: white;
+            border: 1px solid #ccc;
+            display: none;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        #chatbot-header {
+            background: #007bff;
+            color: white;
+            padding: 4px;
+            font-size: 16px;
+        }
+        
+        #chatbot-messages {
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+        }
+        
+        #chatbot-input {
+            width: 80%;
+            padding: 5px;
+            border: none;
+        }
+        
+        #chatbot-send {
+            width: 20%;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        #close-chatbot {
+            float: right;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Question Mark Icon -->
+    <div id="chatbot-icon">?</div>
+
+    <!-- Chatbot Box -->
+    <div id="chatbot-container">
+        <div id="chatbot-header">AI Chatbot <span id="close-chatbot">×</span></div>
+        <div id="chatbot-messages"></div>
+        <input type="text" id="chatbot-input" placeholder="Ask me anything..." oninput="toggleSendButton()">
+        <button id="chatbot-send" disabled>Send</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const chatbotIcon = document.getElementById("chatbot-icon");
+            const chatbotContainer = document.getElementById("chatbot-container");
+            const closeChatbot = document.getElementById("close-chatbot");
+            const chatbotMessages = document.getElementById("chatbot-messages");
+            const chatbotInput = document.getElementById("chatbot-input");
+            const chatbotSend = document.getElementById("chatbot-send");
+
+            chatbotIcon.addEventListener("click", function () {
+                chatbotContainer.style.display = "block";
+            });
+
+            closeChatbot.addEventListener("click", function () {
+                chatbotContainer.style.display = "none";
+            });
+
+            chatbotSend.addEventListener("click", sendMessage);
+            chatbotInput.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                let userMessage = chatbotInput.value.trim();
+                if (userMessage === "") return;
+
+                // Display user message
+                chatbotMessages.innerHTML += `<div><b>You:</b> ${userMessage}</div>`;
+
+                // Disable input while processing
+                chatbotInput.value = "";
+                chatbotSend.disabled = true;
+
+                // Send message to AI
+                fetch("/chatbot/chatbot-response/", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCSRFToken()  // Include CSRF Token
+                    },
+                    body: JSON.stringify({ "message": userMessage }) // Send JSON data
+                })                
+            }
+
+            function toggleSendButton() {
+                chatbotSend.disabled = chatbotInput.value.trim() === "";
+            }
+        });
+    </script>
+    <script>
+        function toggleSendButton() {
+            const chatbotInput = document.getElementById("chatbot-input");
+            const chatbotSend = document.getElementById("chatbot-send");
+    
+            chatbotSend.disabled = chatbotInput.value.trim() === "";
+        }
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const chatbotInput = document.getElementById("chatbot-input");
+            const chatbotSend = document.getElementById("chatbot-send");
+    
+            // Attach the event listener properly
+            chatbotInput.addEventListener("input", toggleSendButton);
+        });
+        function getCSRFToken() {
+            return document.cookie.split("; ")
+                .find(row => row.startsWith("csrftoken="))
+                ?.split("=")[1];
+        }
+        fetch("/chatbot/chatbot-response/", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken()  // Include CSRF Token
+            },
+            body: JSON.stringify({ "message": userMessage }) // Send JSON data
+        })
+        
+    </script>
+    
+</body>
+</html>

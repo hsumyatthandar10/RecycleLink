@@ -1,0 +1,360 @@
+
+
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css' %}" />
+    <script src="{% static 'OwlCarousel2-2.3.4/dist/owl.carousel.min.js' %}"></script>
+    <style>
+ body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow: hidden;
+}
+.all{
+    padding: 5rem;
+}
+.go-home-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 10px 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.go-home-btn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+/* Background */
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url("{% static 'img/c1.jpg' %}") no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    z-index: -1;
+}
+
+/* Movie Container */
+.movie-container {
+    position: absolute;
+    top: 30%;
+    left: 25%;
+    transform: translateY(-50%);
+    z-index: 1;
+    max-width: 500px;
+}
+
+/* Movie Info */
+.movie-info {
+    background: black;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.movie-info h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.movie-info p {
+    margin: 10px 0;
+    font-size: 1em;
+    color: #ddd;
+}
+
+.rating {
+    background: red;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    margin-left: 10px;
+}
+
+/* Buttons */
+.buttons {
+    margin-top: 15px;
+}
+
+.watch-btn, .list-btn {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.watch-btn {
+    background: red;
+    color: white;
+}
+
+.list-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* Movie Selection */
+.movie-selection {
+    position: absolute;
+    bottom: 20%;
+    left: 70%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    background:black;
+    padding: 20px;
+    border-radius: 10px;
+
+}
+
+.movie-item {
+    width: 120px;
+    height: 180px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: transform 0.3s;
+    opacity: 0.6;
+}
+
+.movie-item.active {
+    transform: scale(1.2);
+    opacity: 1;
+    border: 3px solid white;
+}
+.video-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+/* Close Video Button */
+.close-video {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 40px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Video Frame */
+#movie-video {
+    width: 80%;
+    height: 70vh;
+}
+.my-list {
+    display: none;
+    position: absolute;
+    background: white; /* Change to white */
+    color: black; /* Text color black */
+    list-style: none;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 200px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.my-list .list-item {
+    padding: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    border-bottom: 1px solid #ddd;
+}
+
+.my-list .list-item:hover {
+    background: #f2f2f2; /* Light gray on hover */
+}
+    </style>
+</head>
+<body>
+  <!-- "Go Home" Button -->
+<a href="{% url 'home' %}" class="go-home-btn">
+    <i class="fas fa-arrow-left"></i> 
+</a>
+
+<!-- Background -->
+<div class="background" id="background"></div>
+
+<div class="all" id="content-container">
+    <!-- Movie Details -->
+    <div class="movie-container" id="movie-container">
+        <div class="movie-info">
+            <h1 id="movie-title">How recycling work</h1>
+            <p><span id="movie-year">2022</span>  | <span id="movie-duration">2min 13secs</span> 
+            <p id="movie-desc">We all know it’s a good idea to recycle—but have you ever wondered what happens to that aluminum can or cardboard box after you put it in the recycling bin?What happens next? What does it become in its second life? Let’s find out.</p>
+            <div class="buttons">
+                <button class="watch-btn" id="watch-button"><i class="fas fa-play"></i> WATCH</button>
+                <button class="list-btn" id="add-to-list"><i class="fas fa-plus"></i> MY LIST</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- My List Dropdown -->
+    <div class="my-list-container">
+        <button class="list-dropdown-btn" id="toggle-list">📜 My List ▼</button>
+        <ul class="my-list" id="my-list"></ul>
+    </div>
+
+    <!-- Movie Posters -->
+    <div class="movie-selection">
+        <img src="{% static 'img/c1.jpg' %}" class="movie-item active" 
+             data-title="How recycling work" 
+             data-year="2022" 
+             data-duration="2min 13secs"
+             data-bg="{% static 'img/c1.jpg' %}" 
+             data-desc="We all know it’s a good idea to recycle—but have you ever wondered what happens to that aluminum can or cardboard box after you put it in the recycling bin? What happens next? What does it become in its second life? Let’s find out." 
+             data-video="{% static 'video/How Recycling Works.mp4' %}">
+
+        <img src="{% static 'img/c2.jpg' %}" class="movie-item" 
+             data-title="What is recycling? Save Our Planet and Environment!" 
+             data-year="2021" 
+             data-duration="2min 7secs"  
+             data-bg="{% static 'img/c2.jpg' %}" 
+             data-desc="Recycle is a process where we convert and use waste materials into other reusable materials. " 
+            data-video="{% static 'video/What is recycling  Save Our Planet and Environment!.mp4' %}">
+
+        <img src="{% static 'img/c3.jpg' %}" class="movie-item" 
+             data-title="What Happens to Your Recycling After It's Collected?" 
+             data-year="2017" 
+             data-duration="5min 4secs" 
+             data-bg="{% static 'img/c3.jpg' %}" 
+             data-desc="We followed the recycling process from the bins to the plant to understand where our recycling actually goes – here's what happens to your recycling." 
+             data-video="{% static 'video/What Happens to Your Recycling After It s Collected  _ NowThis.mp4' %}">
+    </div>
+</div>
+
+<!-- Video Container (Initially Hidden) -->
+<div class="video-container" id="video-container">
+    <button class="close-video" id="close-video">&times;</button>
+    <iframe id="movie-video" src="" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const background = document.getElementById("background");
+    const movieContainer = document.getElementById("movie-container");
+    const movieItems = document.querySelectorAll(".movie-item");
+    const movieTitle = document.getElementById("movie-title");
+    const movieYear = document.getElementById("movie-year");
+    const movieDuration = document.getElementById("movie-duration");
+    const movieDesc = document.getElementById("movie-desc");
+    const watchButton = document.getElementById("watch-button");
+    const videoContainer = document.getElementById("video-container");
+    const closeVideo = document.getElementById("close-video");
+    const movieVideo = document.getElementById("movie-video");
+    const contentContainer = document.getElementById("content-container");
+    const addToList = document.getElementById("add-to-list");
+    const myList = document.getElementById("my-list");
+    const toggleList = document.getElementById("toggle-list");
+
+    let currentVideoUrl = "";
+    let savedMovies = [];
+
+    // Movie Selection Click Event
+    movieItems.forEach(item => {
+        item.addEventListener("click", function() {
+            const bgImage = this.getAttribute("data-bg");
+            const videoUrl = this.getAttribute("data-video");
+            
+            background.style.backgroundImage = `url('${bgImage}')`;
+            movieTitle.textContent = this.getAttribute("data-title");
+            movieYear.textContent = this.getAttribute("data-year");
+            movieDuration.textContent = this.getAttribute("data-duration");
+            movieDesc.textContent = this.getAttribute("data-desc");
+
+            movieItems.forEach(movie => movie.classList.remove("active"));
+            this.classList.add("active");
+
+            currentVideoUrl = videoUrl;
+        });
+    });
+
+    // Open Video on "Watch" Button Click
+    watchButton.addEventListener("click", function() {
+        if (currentVideoUrl) {
+            movieVideo.src = currentVideoUrl;
+            videoContainer.style.display = "flex";
+            contentContainer.style.display = "none";  // Hide the entire content
+        }
+    });
+
+    // Close Video
+    closeVideo.addEventListener("click", function() {
+        movieVideo.src = "";
+        videoContainer.style.display = "none";
+        contentContainer.style.display = "block"; // Restore original content
+    });
+
+    // Add to "My List"
+    addToList.addEventListener("click", function() {
+        let movieName = movieTitle.textContent;
+        let movieData = {
+            title: movieName,
+            bg: background.style.backgroundImage,
+            video: currentVideoUrl,
+            year: movieYear.textContent,
+            duration: movieDuration.textContent,
+            desc: movieDesc.textContent
+        };
+
+        if (!savedMovies.find(m => m.title === movieName)) {
+            savedMovies.push(movieData);
+
+            let listItem = document.createElement("li");
+            listItem.textContent = movieName;
+            listItem.classList.add("list-item");
+
+            listItem.addEventListener("click", function() {
+                background.style.backgroundImage = movieData.bg;
+                movieTitle.textContent = movieData.title;
+                movieYear.textContent = movieData.year;
+                movieDuration.textContent = movieData.duration;
+                movieDesc.textContent = movieData.desc;
+                currentVideoUrl = movieData.video;
+            });
+
+            myList.appendChild(listItem);
+        }
+    });
+
+    // Toggle My List Display
+    toggleList.addEventListener("click", function() {
+        myList.style.display = myList.style.display === "block" ? "none" : "block";
+    });
+});
+</script>
+</body>
+</html>
+{% endblock %}    

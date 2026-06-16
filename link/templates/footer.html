@@ -1,0 +1,228 @@
+{% load static %}
+
+{% include 'header.html' %}
+
+{% block content %}
+<!-- Your page content goes here -->
+{% endblock %}
+
+<!-- Footer -->
+<footer>
+    <div class="call">
+        <!-- Service Hotline Section -->
+        <div class="call_text">
+            <h4>Service-Hotline</h4>
+            <p>Telefonische Beratung unter:</p>
+            <p>+49 (0) 771 / 175 131 69</p>
+            <p>Montag – Freitag:</p>
+            <p>08:00 – 12.00 Uhr</p>
+            <p>13.00 – 17.00 Uhr</p>
+        </div>
+
+        <!-- Shop Section -->
+        <div class="call_text2">
+            <h4>Shop</h4>
+            <ul>
+                <li>Software</li>
+                <li>Hardware</li>
+                <li>Items</li>
+                <li>Exclusives</li>
+                <li>Online service</li>
+            </ul>
+        </div>
+
+        <!-- Informationen Section -->
+        <div class="call_text3">
+            <h4>Information</h4>
+            <ul>
+                <li>Download area</li>
+                <li>Imprint</li>
+                <li>Data protection</li>
+                <li>Newsletter</li>
+                <li>Shipment</li>
+            </ul>
+        </div>
+
+        <!-- Our Company Section -->
+        <div class="call_center">
+            <h4>Our Company</h4>
+            <ul>
+                <li>About Us</li>
+                <li>Contact</li>
+                <li>Privacy Policy</li>
+                <li>Terms of Use</li>
+            </ul>
+            <div class="call_link">
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#"><i class="fa-brands fa-vimeo-v"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    :root {
+        --primary: #E2DEA8;
+        --black: #000000;
+        --green: #213F1B;
+        --white: #FFFF;
+        --pgreen: #63E88D;
+        --linecolor: #B39B24;
+        --bgcolor: #E8F5E9;
+        --grey: #555;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        transition: all .5s;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Full height of the viewport */
+        font-family: Arial, sans-serif;
+    }
+
+    footer {
+        background-color: var(--primary);
+        font-family: sans-serif;
+        padding: 30px 50px;
+        margin-top: auto; /* This makes the footer stick to the bottom */
+    }
+
+    .call {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .call .call_text {
+        flex: 1;
+    }
+
+    .call .call_text2 {
+        flex: 1;
+        border-left: 1px solid black;
+        padding-left: 20px;
+    }
+
+    .call .call_text3 {
+        flex: 1;
+        border-left: 1px solid black;
+        padding-left: 20px;
+    }
+
+    .call_center {
+        flex: 1;
+        border-left: 1px solid black;
+        padding-left: 20px;
+    }
+
+    .call_center ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .call_link {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .call_link a {
+        color: var(--black);
+    }
+    @media (max-width: 1024px) {
+    .call {
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .call > div {
+        flex: 1 1 calc(50% - 20px); /* Two columns */
+        min-width: 250px;
+    }
+
+    .call .call_text2,
+    .call .call_text3,
+    .call_center {
+        border-left: none;
+        padding-left: 0;
+    }
+
+    .call_link {
+        justify-content: center;
+    }
+}
+
+/* 📌 Small Tablet View (768px) */
+@media (max-width: 768px) {
+    .call {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .call > div {
+        flex: 1 1 100%;
+        max-width: 400px;
+    }
+
+    .call .call_text2,
+    .call .call_text3,
+    .call_center {
+        border-left: none;
+        padding-left: 0;
+    }
+
+    .call_link {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+/* 📌 Mobile View (480px) */
+@media (max-width: 480px) {
+    footer {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .call {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .call > div {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+    .call ul {
+        padding: 0;
+    }
+
+    .call_link {
+        justify-content: center;
+    }
+
+    .call_link a {
+        font-size: 1.2rem; /* Slightly smaller icons */
+    }
+}
+</style>
+
+</body>
+</html>

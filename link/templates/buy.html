@@ -1,0 +1,785 @@
+{% extends 'footer.html' %}
+
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Grid with Filters</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #E2DEA8;
+            --green: #008115;
+            --sale-color: #ff5757;
+            --white: #ffffff;
+            --text-color: #333;
+            --bg-color: #f0f8f4;
+        }
+
+        /* Main Body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .intro-section {
+            color: var(--text-color);
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 70px; /* Adjust for fixed navbar */
+        }
+
+        .intro-section .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--green);
+        }
+
+        .intro-section .page-description {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+
+        .container {
+            display: flex;
+            padding: 20px;
+        }
+        .categories {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .categories li {
+            margin-bottom: 10px;
+            padding:5px;
+            font-weight: bold;
+            font-size: 17px;
+            width: 230px;
+
+        }
+        
+        .ccategories {
+            list-style-type: none;
+            margin-left: 10px;
+            max-height: 0px;
+            width: 500px;
+            transition: max-height 0.5s ease;
+        }
+        .ccategories.open {
+            max-height: 100px;
+            opacity: 1;
+
+            /* Adjust based on content */
+        }
+       
+        .subcategories {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        
+        .toggle-btn {
+            font-weight: bold;
+            margin-left: 40px;
+            padding: 5px;
+            cursor: pointer;
+            color: #000;
+            transition: transform 0.5s ease;
+            font-size: 18px;
+        }
+
+        .category-link {
+            line-height: 30px;
+            text-decoration: none;
+            transition: color 0.3s;
+            color: black;
+        }
+        
+        .category-link:hover {
+            color: green;
+        }
+
+        /* Sidebar Filters */
+        .sidebar {
+            width: 15%;
+            height: auto;
+            background-color: #f0f8f4;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        /* Product Grid */
+        .content {
+            width: 80%;
+            padding: 0 20px;
+        }
+
+        .sort-bar {
+            display: flex;
+            gap:10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .sort-bar {
+            display: flex;
+            align-items: center; 
+            gap: 10px; 
+            justify-content: flex-start; 
+            margin-bottom: 20px;
+        }
+        
+
+        .sort-bar select {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .product-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+           
+        }
+        
+        .product-card {
+            position: relative;
+            flex: 1 1 calc(25% - 20px); /* Ensures 4 items per row with spacing */
+            max-width: calc(25% - 20px); /* Prevent items from growing larger than intended */
+            background-color: var(--white);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column; /* Ensure consistent content stacking */
+            justify-content: space-between; /* Spread content evenly inside the card */
+        }
+        
+        .product-card .image-wrapper {
+            height: 200px; /* Fixed height for images */
+            overflow: hidden;
+        }
+        
+        .product-card img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover; /* Prevent images from stretching */
+        }
+        
+        .product-info {
+            padding: 10px;
+            flex-grow: 1; /* Ensures this section fills extra space */
+        }
+        
+        .product-actions {
+            margin-top: auto; /* Push actions to the bottom of the card */
+        }
+        
+
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-wrapper {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-card .image-wrapper img.primary {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card .image-wrapper img.secondary {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card:hover .image-wrapper img.primary {
+            opacity: 0;
+        }
+
+        .product-card:hover .image-wrapper img.secondary {
+            opacity: 1;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1rem;
+            color: var(--green);
+            margin-bottom: 10px;
+        }
+
+        .sale-price {
+            text-decoration: line-through;
+            color: #999;
+            margin-right: 10px;
+        }
+
+        .sale-badge {
+            position: absolute;
+            top: 55px;
+            left: -30px;
+            background-color: #d32f2f; /* Adjust the color as needed */
+            color: #fff; /* White text */
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 5px 20px;
+            z-index: 2;
+            transform: rotate(-45deg);
+            transform-origin: top left;
+            width: 120px; /* Adjust the width for the badge */
+            text-align: center;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Optional shadow for styling */
+        }
+
+        .wishlist-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: var(--sale-color);
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .action-btn, .details-btn {
+            background-color: #d4edde;
+            color: green;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-btn:hover, .details-btn:hover {
+            background-color: #008115;
+            color: white; 
+        }
+        @media (max-width: 1042px) {
+          
+          .sidebar {
+          width: 20%; /* Make the sidebar full width */
+          padding: 15px;
+      }
+  
+      .ccategories {
+          width: 100%; /* Make the categories list take full width */
+      }
+  
+      .toggle-btn {
+          font-size: 16px;
+          margin-left: 10px; /* Adjust for smaller screens */
+      }
+  
+      .category-link {
+          font-size: 16px; /* Reduce text size */
+          display: block; /* Make each category take full width */
+          padding: 8px 0;
+      }
+  
+      .subcategories {
+          padding-left: 20px; /* Indent subcategories */
+      }
+      .content {
+          width: 75%;
+      }
+      .product-card {
+          flex: 1 1 calc(33.33% - 20px); /* 3 items per row */
+          max-width: calc(33.33% - 20px);
+      }
+  }
+  
+  @media (max-width: 768px) {
+      .ccategories {
+          width: 100%; /* Make the categories list take full width */
+          display: flex;
+      }
+  
+      .toggle-btn {
+          font-size: 16px;
+          margin-left: 10px; /* Adjust for smaller screens */
+      }
+  
+      .category-link {
+          font-size: 16px; /* Reduce text size */
+          display: block; /* Make each category take full width */
+          padding: 8px 0;
+      
+      }
+  
+      .subcategories {
+          padding-left: 20px; /* Indent subcategories */
+          
+      }
+      .container {
+          flex-direction: column;
+          align-items: center;
+      }
+      .sidebar {
+          width: 100%;
+          padding: 0 20px 120px 20px;
+      }
+      .content {
+          width: 100%;
+          padding: 10px;
+      }
+      .product-card {
+          flex: 1 1 calc(50% - 20px); /* 2 items per row */
+          max-width: calc(50% - 20px);
+      }
+  }
+  
+  @media (max-width: 468px) {
+      .intro-section .page-title {
+          font-size: 2rem;
+      }
+      .intro-section .page-description {
+          font-size: 1rem;
+      }
+      .product-card {
+          flex: 1 1 100%; /* 1 item per row */
+          max-width: 100%;
+      }
+      .sidebar {
+          width: 120%;
+          padding: 0 20px 120px 20px;
+      }
+  }
+  .stock-status {
+    font-weight: bold;
+    color: green;
+}
+
+.stock-status.out-of-stock {
+    color: red;
+}
+
+    </style>
+</head>
+<body>
+    <section class="intro-section">
+        <h1 class="page-title">Welcome to RecycleLink</h1>
+        <p class="page-description">
+            Discover eco-friendly solutions! Browse through our collection of recycled and waste management products. Join us in building a sustainable future by buying, selling, or exchanging today!
+        </p>
+    </section>
+    <div class="container">
+        <!-- Sidebar for Filters -->
+        <aside class="sidebar">
+            <h3>Filter by Collection</h3>
+            <br>
+                <h5>CATEGORIES</h5>
+                <br>
+            <div>
+                <ul class="categories">   
+                    <ul class="ccategories">
+                        {% for category in categories %}
+                        <li>
+                            <a href="{% url 'buy_product_list_by_category' category.id %}?sort={{ request.GET.sort }}" class="category-link" data-category-id="{{ category.id }}">
+                                {{ category.name }}
+                            </a>
+                            <span class="toggle-btn" onclick="toggleSubcategories(this)">+</span>
+                            <ul class="subcategories" style="display: none;">
+                                {% for subcategory in category.ccategories.all %}
+                                    <li>
+                                        <a href="{% url 'buy_product_list_by_subcategory' subcategory.id %}?sort={{ request.GET.sort }}" class="category-link" data-subcategory-id="{{ subcategory.id }}">
+                                            {{ subcategory.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Sort Bar -->
+            <div class="sort-bar">
+                <label for="sort">Sort by:</label>
+                <form method="GET" action="{% url 'product_filter_buy' %}" id="sortForm">
+                    <select name="sort" id="sort" onchange="this.form.submit()">
+                        <option value="default" {% if request.GET.sort == "default" %}selected{% endif %}>Default</option>
+                        <option value="name-asc" {% if request.GET.sort == "name-asc" %}selected{% endif %}>Name (A - Z)</option>
+                        <option value="name-desc" {% if request.GET.sort == "name-desc" %}selected{% endif %}>Name (Z - A)</option>
+                        <option value="price-asc" {% if request.GET.sort == "price-asc" %}selected{% endif %}>Price (Low > High)</option>
+                        <option value="price-desc" {% if request.GET.sort == "price-desc" %}selected{% endif %}>Price (High > Low)</option>
+                    </select>
+                </form>            
+            </div>
+
+            <!-- Product Grid -->
+            <div class="product-grid">
+                {% for product in buy_page_products %}
+                <div class="product-card">
+                    {% if product.is_sale %}
+                    <div class="sale-badge">Sale</div>
+                    {% endif %}
+                    <div class="wishlist-icon" data-product-id="{{ product.id }}">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="image-wrapper">
+                        <img src="{{ product.main_image.url }}" alt="Primary Image" class="primary">
+                        {% if product.secondary_image %}
+                        <img src="{{ product.secondary_image.url }}" alt="Secondary Image" class="secondary">
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <p class="product-price">
+                            {% if product.is_sale %}
+                            <span class="sale-price">MMK {{ product.price }}</span> MMK {{ product.sale_price }}
+                            {% else %}
+                            MMK {{ product.price }}
+                            {% endif %}
+                        </p>
+                        {% comment %} <div class="product-actions">
+                            <button class="action-btn add-to-cart-btn" data-product-id="{{ product.id }}">Add to
+                                Buy</button>
+                            <button class="details-btn">
+                                <i class="fas fa-info-circle"></i><a href="{% url 'buy_productDetail' product.id %}">Details</a>
+                            </button>
+                        </div> {% endcomment %}
+                        {% if product.stock > 0 %}
+                        {% comment %} <p class="stock-status">Stock Left: {{ product.stock }}</p> {% endcomment %}
+                        {% else %}
+                        <p class="stock-status out-of-stock">Out of Stock</p>
+                        {% endif %}
+
+                        <div class="product-actions">
+                            <button class="action-btn add-to-cart-btn" data-product-id="{{ product.id }}"
+                                {% if product.stock == 0 %}disabled{% endif %}>
+                                Add to Buy
+                            </button>
+                            <button class="details-btn">
+                                <i class="fas fa-info-circle"></i>
+                                <a href="{% url 'buy_productDetail' product.id %}">Details</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+           <!-- search -->
+            <div class="product-grid">
+            {% if searched %}
+                {% if results %}
+                    <h3>Search results for: "{{ searched }}"</h3>
+                    {% for product in results %}
+                        <div class="product-card">
+                            {% if product.is_sale %}
+                            <div class="sale-badge">Sale</div>
+                            {% endif %}
+                            <div class="wishlist-icon" data-product-id="{{ product.id }}">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                        <div class="image-wrapper">
+                            <img src="{{ product.main_image.url }}" alt="Primary Image" class="primary">
+                            {% if product.secondary_image %}
+                                <img src="{{ product.secondary_image.url }}" alt="Secondary Image" class="secondary">
+                            {% endif %}
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">{{ product.name }}</h3>
+                            <p class="product-price">
+                                {% if product.is_sale %}
+                                    <span class="sale-price">MMK {{ product.price }}</span> MMK{{ product.sale_price }}
+                                {% else %}
+                                    MMK {{ product.price }}
+                                {% endif %}
+                            </p>
+                            {% comment %} <div class="product-actions">
+                                <button class="action-btn add-to-cart-btn" data-product-id="{{ product.id }}">Add to
+                                    Buy</button>
+                                <button class="details-btn">
+                                    <i class="fas fa-info-circle"></i><a href="{% url 'buy_productDetail' product.id %}">Details</a>
+                                </button>
+                            </div> {% endcomment %}
+                            {% if product.stock > 0 %}
+                            {% comment %} <p class="stock-status">Stock Left: {{ product.stock }}</p> {% endcomment %}
+                            {% else %}
+                            <p class="stock-status out-of-stock">Out of Stock</p>
+                            {% endif %}
+
+                            <div class="product-actions">
+                                <button class="action-btn add-to-cart-btn" data-product-id="{{ product.id }}"
+                                    {% if product.stock == 0 %}disabled{% endif %}>
+                                    Add to Buy
+                                </button>
+                                <button class="details-btn">
+                                    <i class="fas fa-info-circle"></i>
+                                    <a href="{% url 'buy_productDetail' product.id %}">Details</a>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No products found for "{{ searched }}".</p>
+                {% endif %}
+            {% endif %}
+        </div>          
+            
+        </div>
+    </div>
+</div>
+<script>
+    function toggleSubcategories(btn) {
+        const subcategories = btn.nextElementSibling;
+        if (subcategories.style.display === 'none') {
+            subcategories.style.display = 'block';
+            btn.innerText = '-';
+        } else {
+            subcategories.style.display = 'none';
+            btn.innerText = '+';
+        }
+    }
+    
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Add to Buy Cart Button
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const productId = button.getAttribute('data-product-id');
+
+                fetch("{% url 'add_to_cart' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        cart_type: 'buy' // Specify cart type as 'buy'
+                    }),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Update the buy cart icon count
+                        const buyCartCount = document.getElementById('cart-count');
+                        if (buyCartCount) {
+                            buyCartCount.innerText = data.cart_count; // Update the count dynamically
+                        }
+
+                        // Reload the cart overlay if it's open
+                        if (document.getElementById('cart-overlay').classList.contains('open')) {
+                            loadCartItems('buy'); // Load updated cart items dynamically
+                        }
+                    } else {
+                        console.error('Error adding to cart:', data.error); // Log error feedback
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding to cart:', error); // Log network errors
+                });
+            });
+        });
+
+        // Function to load cart items dynamically
+        function loadCartItems(cartType) {
+            fetch(`/get-cart-items/?cart_type=${cartType}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch cart items');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const cartItemsContainer = document.querySelector('.cart-items');
+                    const cartFooter = document.querySelector('.cart-footer');
+                    
+                    // Clear existing items
+                    cartItemsContainer.innerHTML = '';
+
+                    if (data.items && data.items.length > 0) {
+                        // Populate cart with items
+                        data.items.forEach(item => {
+                            cartItemsContainer.innerHTML += `
+                                <div class="cart-item">
+                                    <img src="${item.image_url}" alt="${item.name}">
+                                    <div class="item-details">
+                                        <p>${item.name}</p>
+                                        <p>${item.quantity} x MMK ${item.price}</p>
+                                    </div>
+                                    <button class="remove-item" data-item-id="${item.id}">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                        });
+
+                        // Update the cart total
+                        cartFooter.innerHTML = `
+                            <p>Total: MMK ${data.total}</p>
+                           <button class="checkout-btn" onclick="redirectToOrderSuccess()">Check Out</button>
+                        `;
+                    } else {
+                        // Show empty cart message
+                        cartItemsContainer.innerHTML = '<p>Your cart is empty!!!</p>';
+                        cartFooter.innerHTML = '';
+                    }
+
+                    // Attach event listeners for remove buttons
+                    attachCartEventListeners(cartType);
+                })
+                .catch(error => console.error('Error loading cart items:', error));
+        }
+        function redirectToOrderSuccess() {
+            window.location.href = "/ShippingInfo/";
+        }
+        // Attach event listeners for cart actions
+        function attachCartEventListeners(cartType) {
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', () => {
+                    const itemId = button.getAttribute('data-item-id');
+                    updateCartItem(itemId, 'remove', cartType);
+                });
+            });
+        }
+
+        // Update cart item (increase, decrease, or remove)
+        function updateCartItem(itemId, action, cartType) {
+            fetch(`/update-cart-item/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({ item_id: itemId, action: action, cart_type: cartType }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update cart item');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Reload the cart items dynamically
+                    loadCartItems(cartType);
+                } else {
+                    console.error('Error updating cart item:', data.error);
+                }
+            })
+            .catch(error => console.error('Error updating cart item:', error));
+        }
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.wishlist-icon').forEach(icon => {
+            icon.addEventListener('click', () => {
+                const productId = icon.getAttribute('data-product-id');
+    
+                fetch("{% url 'add_to_wishlist' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: JSON.stringify({ product_id: productId }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const wishlistCount = document.getElementById('wishlist-count');
+                            if (wishlistCount) {
+                                wishlistCount.innerText = data.wishlist_count;
+                            }
+                            
+                        } else {
+                            alert(data.error || "Failed to add to wishlist.");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            });
+        });
+    });
+    
+</script>
+<script>
+    document.querySelectorAll(".check-stock-btn").forEach(button => {
+        button.addEventListener("click", function() {
+            const productId = this.dataset.productId;
+            fetch(`/check-stock/${productId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.stock !== undefined) {
+                        alert(`Stock Left: ${data.stock}`);
+                    } else {
+                        alert("Product not found");
+                    }
+                })
+                .catch(error => console.error("Error fetching stock:", error));
+        });
+    });
+    
+</script>
+
+
+</body>
+</html>
+{% endblock %}

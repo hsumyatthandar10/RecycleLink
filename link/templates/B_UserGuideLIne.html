@@ -1,0 +1,204 @@
+{% extends 'Bfooter.html' %}
+
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guidelines</title>
+    <link rel="stylesheet" href="{% static 'css/guidelines.css' %}">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #ffffff;
+            --heading-color: #213F1B;
+            --bg-color: #F5F5F5;
+            --highlight-color: #ffbb33;
+            --text-color: #333;
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --button-hover-color: #45a049;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding:  100px 50px 30px;
+            text-align: center;
+        }
+
+        .guidelines-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 8px var(--card-shadow);
+            border-radius: 8px;
+        }
+
+        .guidelines-container h1 {
+            font-size: 2.5rem;
+            color: var(--heading-color);
+            margin-bottom: 20px;
+        }
+
+        .guideline-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .guideline-step .step-icon {
+            width: 40px;
+            height: 50px;
+            background-color: var(--highlight-color);
+            color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            margin-right: 20px;
+        }
+
+        .guideline-step .step-content {
+            max-width: 900px;
+        }
+
+        .guideline-step h3 {
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .guideline-step p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        .important-box {
+            background-color: #fbe4b2;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 5px solid var(--highlight-color);
+            font-weight: bold;
+            color: var(--heading-color);
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .button-container a {
+            text-decoration: none;
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border-radius: 5px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container a:hover {
+            background-color: var(--button-hover-color);
+        }
+
+        @media (max-width: 768px) {
+            .guidelines-container {
+                padding: 30px;
+            }
+
+            .guideline-step {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .guideline-step .step-icon {
+                margin-bottom: 15px;
+            }
+
+            .guideline-step .step-content {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+<header>
+    <h1>ကျွန်တော်တို့ရဲ့အသုံးပြုပုံလမ်းညွှန်မှကြိုဆိုပါတယ်</h1>
+    <p>စတင်ရန်နှင့် သင့်အတွေ့အကြုံကို အကောင်းဆုံးအသုံးချရန် ဤရိုးရှင်းသောအဆင့်များကို လိုက်နာပါ။</p>
+</header>
+
+<div class="guidelines-container">
+    <h1>အသုံးပြုပုံ</h1>
+    
+    <!-- Step 1 -->
+    <div class="guideline-step">
+        <div class="step-icon">1</div>
+        <div class="step-content">
+            <h3>စာရင်းသွင်းပါ</h3>
+            <p>သင်သည်ပလက်ဖောင်းကိုအသုံးပြုမှုစတင်ရန်အတွက် အကောင့်တစ်ခုဖန်တီးဖို့လိုအပ်ပါတယ်။”စတင်စာရင်းသွင်းပါ”ဆိုတဲ့ ခလုတ်ကိုနှိပ်ပါ၊သင့်အချက်အလက်တွေကိုဖြည့်ပါ၊ပြီးရင်အားလုံးကိုသတ်မှတ်ပါ။</p>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="guideline-step">
+        <div class="step-icon">2</div>
+        <div class="step-content">
+            <h3>သင့်ပရိုဖိုင်ကိုဖြည့်ပါ</h3>
+            <p>သက်ဆိုင်ရာအချက်အလက်မှာ သင့်ရဲ့ပရိုဖိုင်ကိုဖြည့်ပါ။သင့်အကောင့်ကို ပြီးပြည့်စုံပြီး ပိုမိုဆွဲဆောင်မှုရှိစေရန် ပရိုဖိုင်ကို တင်ပါ။</p>
+        </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="guideline-step">
+        <div class="step-icon">3</div>
+        <div class="step-content">
+            <h3>ပစ္စည်းမျာရကိုရှာဖွေပါ</h3>
+            <p>ကျွန်ုပ်တို့ကမ်းလှမ်းထားသော ထုတ်ကုန်အမျိုးမျိုးကို ရှာဖွေပါ။သင်၏ရှာဖွေမှုကို လွယ်ကူစေပြီး သင်ရှာဖွေနေသည့်အရာကို အတိအကျရှာဖွေရန် စုစည်းထားတော့ပစ္စည်းများကို အသုံးပြုပါ</p>
+        </div>
+    </div>
+
+    <!-- Important Note -->
+    <div class="important-box">
+        <p><strong>အရေးကြီးတာကတော့</strong>မှတ်ပုံတင်ခြင်းလုပ်ငန်းစဉ်ကို အပြီးသတ်ပြီး သင့်အကောင့်သို့ အပြည့်အဝဝင်ရောက်ခွင့်ရရန် အကောင့်ဖွင့်ပြီးနောက် သင်၏အီးမေးလ်ကို သေချာကြောင်းအတည်ပြုပါ။</p>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="guideline-step">
+        <div class="step-icon">4</div>
+        <div class="step-content">
+            <h3>ပစ္စည်းများကိုစျေးဝယ်ခြင်းထဲထည့်ပါ</h3>
+            <p>သင်ကြိုက်သောပစ္စည်းတစ်ခါတွေ့တိုင်း သင့်ရဲ့စျေးဝယ်ခြင်းထဲသွားထည့်ပါ။ ငွေမရှင်းမှီ သင့်ရဲ့စျေးဝယ်ခြင်းကိုပြန်လည်စစ်ဆေးနိုင်သည်။</p>
+        </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="guideline-step">
+        <div class="step-icon">5</div>
+        <div class="step-content">
+            <h3>ငွေရှင်းရန်</h3>
+            <p>သင်ဝယ်ဖို့အဆင်သင့်ဖြစ်ရင်ငွေရှင်းစာမျက်နှာသို့ဆက်သွားပါ။သင်၏ငွေပေးချေမှုအသေးစိတ်အချက်အလက်များကိုထည့်၍ မှာယူပါ။</p>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a href="{% url 'home' %}">ပင်မစာမျက်နှာသို့ပြန်သွားရန်</a>
+    </div>
+</div>
+
+</body>
+</html>
+
+{% endblock %}

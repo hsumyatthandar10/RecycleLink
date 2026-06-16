@@ -1,0 +1,696 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>header</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+         .close-cart {
+            font-size: 30px;
+            opacity: 0.7;
+        }
+
+        .close-cart:hover {
+            font-size: 30px;
+            opacity: 0.8;
+            color: red;
+        }
+
+        :root {
+            --primary: #E2DEA8;
+            --black: #000000;
+            --green: #213F1B;
+            --white: #FFFF;
+            --pgreen: #63E88D;
+            --linecolor: #B39B24;
+            --bgcolor: #E8F5E9;
+            --grey: #555;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all .5s;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary);
+            padding: 10px 20px;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .navbar .logo img {
+            height: 4rem;
+            width: 7rem;
+        }
+        #nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+        .navbar nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar nav ul li a {
+            text-decoration: none;
+            color: var(--black);
+            font-weight: bold;
+            white-space: nowrap;
+            padding: 20px;
+            display: block;
+        }
+        #toggle {
+            color: var(--black);
+            font-size: 1.5rem;
+            background-color: transparent;
+            border: 0;
+            cursor: pointer;
+            display: none;
+            padding: 0.7rem;
+        }
+        .navbar nav ul li a:hover {
+            color: var(--green);
+            font-size: 20px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 3rem;
+        }
+
+        .actions input {
+            padding: 7px;
+            border: 3px solid var(--white);
+            border-radius: 8px;
+        }
+
+        .actions .language-btn,
+        .actions .people-btn,
+        .actions .heart,
+        .actions .shop,
+        .actions .sell {
+            background-color: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 .5rem;
+        }
+
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 500px;
+            /* Increase width */
+            height: 100%;
+            background-color: #ffffff;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .cart-overlay.open {
+            transform: translateX(0);
+        }
+
+        .cart-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-header h2 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .cart-items {
+            flex-grow: 1;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+
+        .item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            color: #555;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-controls button {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .quantity-controls span {
+            font-size: 16px;
+        }
+
+        .item-total {
+            flex: 1;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+            padding-left: 40px;
+        }
+
+        .remove-item {
+            background: none;
+            border: none;
+            color: #d9534f;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+
+        .cart-footer {
+            text-align: center;
+        }
+
+        .checkout-btn {
+            background-color: #f50057;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+
+        .checkout-btn:hover {
+            background-color: #c51162;
+        }
+
+        .language-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .language-btn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            z-index: 1;
+        }
+
+        .language-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            text-decoration: none;
+            display: block;
+            padding: 8px;
+            color: black;
+        }
+    
+      
+
+
+        @media (max-width: 1024px) {
+    .navbar {
+        padding: 10px;
+    }
+    
+    #toggle {
+        display: block;
+    }
+
+    /* Hide nav-links by default */
+    #nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: var(--primary);
+        padding: 10px;
+        text-align: center;
+    }
+
+    /* Show nav-links when active */
+    #nav-links.active {
+        display: flex;
+    }
+
+    #nav-links li {
+        display: block;
+        padding: 10px;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .actions input {
+        width: 150px;
+    }
+
+    .actions .language-btn,
+    .actions .people-btn,
+    .actions .heart,
+    .actions .shop,
+    .actions .sell {
+        display: inline-block;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: row;
+        padding: 10px;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Ensure nav links take full width */
+    #nav-links {
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 60px;
+        background-color: var(--primary);
+        text-align: center;
+        flex-direction: column;
+    }
+
+    /* Keep icons visible at all times */
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        width: auto;
+    }
+
+    /* When toggle is clicked, the menu appears but the icons stay */
+    #nav-links.active {
+        display: flex;
+    }
+
+    /* Ensure icons are always visible */
+    .actions .language-btn,
+    .actions .people-btn,
+    .actions .heart,
+    .actions .shop,
+    .actions .sell {
+        display: inline-block;
+    }
+
+    .cart-overlay {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-overlay {
+        width: 100%;
+    }
+
+    .actions input {
+        width: 100%;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="{% static 'img/Untitled_design-removebg.png' %}" alt="Recycle Link Logo" />
+        </div>
+        <button id="toggle"><i class="fa-solid fa-bars"></i></button>
+        <nav>
+            <ul id="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'sell' %}">Sell</a></li>
+                <li><a href="{% url 'buy' %}">Buy</a></li>
+                <li><a href="{% url 'aboutus' %}">About us</a></li>
+                <li><a href="{% url 'contactus' %}">Contact us</a></li>
+                <li><a href="{% url 'userGuideline' %}">User Guideline</a></li>
+            </ul>
+        </nav>
+        <div class="actions">
+            <form method="POST" action="{% url 'search' %}" class="search-form">
+                {% csrf_token %}
+                <div class="search-container">
+                    <input type="text" class="form-control" placeholder="Search for the recycled products..."
+                        name="searched" required>
+                </div>
+            </form>
+            <!-- People and Language icons (Always visible) -->
+            <div class="language-dropdown">
+                <button class="language-btn"><a href="{% url 'bhome_view' %}"
+                        style="text-decoration: none; color: #000000;"><i class="fa-solid fa-globe"></i></a></button>
+                <div class="dropdown-content">
+                    <a href="{% url 'toggle_language' 'en' %}">English</a>
+                    <a href="{% url 'toggle_language' 'my' %}">Burmese</a>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="people-btn" style="text-decoration: none; color: black;">
+                <i class="fas fa-user"></i>
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}" class="people-btn" style="text-decoration: none; color: black;">
+                <i class="fas fa-user"></i>
+            </a>
+            {% endif %}
+
+            <!-- Conditional Icons -->
+            {% if request.resolver_match.url_name == 'sell' %}
+            <a href="{% url 'wishlist' %}" class="heart" style="text-decoration: none;">
+                <i class="fas fa-heart"></i>
+                <span id="wishlist-count">{{ wishlist_count }}</span>
+
+            </a>
+
+            <button id="sell-btn" class="sell">
+                <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                <span id="cart-count1">{{ cart_count1 }}</span>
+
+            </button>
+            {% elif request.resolver_match.url_name == 'buy' %}
+            <a href="{% url 'wishlist' %}" class="heart" style="text-decoration: none;">
+                <i class="fas fa-heart"></i>
+                <span id="wishlist-count">{{ wishlist_count }}</span>
+
+
+            </a>
+            <button id="cart-btn" class="shop">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span id="cart-count">{{ cart_count }}</span>
+            </button>
+            {% else %}
+            <!-- For other pages, only show default icons -->
+            {% endif %}
+        </div>
+
+    </header>
+
+    <!-- Cart Overlay -->
+    <div id="cart-overlay" class="cart-overlay">
+        <div class="cart-container">
+            <div class="cart-header">
+                <h2 id="cart-title">Sell Cart</h2>
+                <div class="close-cart" id="close-cart-btn">
+                    <i class="fa-regular fa-rectangle-xmark"></i>
+                </div>
+            </div>
+            <div class="cart-items">
+                <!-- Loop through cart items -->
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <!-- Handle different product types -->
+                    {% if item.product %}
+                    <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}">
+                    <div class="item-details">
+                        <p>{{ item.product.name }}</p>
+                        <p>{{ item.quantity }} x {{ item.product.price }}</p>
+                    </div>
+                    {% else %}
+                    <img src="{{ item.product_sell.image.url }}" alt="{{ item.product_sell.name }}">
+                    <div class="item-details">
+                        <p>{{ item.product_sell.name }}</p>
+                        <p>{{ item.quantity }} x {{ item.product_sell.price }}</p>
+                        <button class="decrease-quantity" data-item-id="${item.id}">-</button>
+                        <button class="increase-quantity" data-item-id="${item.id}">+</button>
+                        <button class="remove-item" data-item-id="{{ item.id }}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+
+                    </div>
+                    {% endif %}
+                    <button class="remove-item" data-item-id="{{ item.id }}">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+
+                </div>
+                {% empty %}
+                <p>Your cart is empty.</p>
+                {% endfor %}
+            </div>
+            <div class="cart-footer">
+                <p>Total: MMK {{ cart_total }}</p>
+                <button class="checkout-btn">Check Out</button>
+            </div>
+        </div>
+
+    </div>
+    <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const toggle = document.querySelector("#toggle");
+            const navLinks = document.querySelector("#nav-links");
+            const toggleIcon = toggle.querySelector("i");
+
+            toggle.addEventListener("click", function () {
+                navLinks.classList.toggle("active");
+
+                // Change icon when menu is opened/closed
+                if (navLinks.classList.contains("active")) {
+                    toggleIcon.classList.remove("fa-bars");
+                    toggleIcon.classList.add("fa-x");
+                } else {
+                    toggleIcon.classList.remove("fa-x");
+                    toggleIcon.classList.add("fa-bars");
+                }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartOverlay = document.getElementById('cart-overlay');
+            const closeCartBtn = document.getElementById('close-cart-btn');
+            const cartTitle = document.getElementById('cart-title');
+            const cartBtn = document.getElementById('cart-btn'); // Buy button
+            const sellBtn = document.getElementById('sell-btn'); // Sell button
+
+            // Function to determine the page and cart type
+            function getCartType() {
+                if (window.location.pathname.includes('/buy')) {
+                    return 'buy';
+                } else if (window.location.pathname.includes('/sell')) {
+                    return 'sell';
+                }
+                return null; // Default to null if not on a buy or sell page
+            }
+
+            // Open the Cart based on the current page
+            const cartType = getCartType();
+
+            if (cartType === 'buy') {
+                cartBtn.addEventListener('click', () => {
+                    cartTitle.innerText = 'Buy Cart';
+                    cartOverlay.classList.add('open');
+                    loadCartItems('buy');
+                });
+            } else if (cartType === 'sell') {
+                sellBtn.addEventListener('click', () => {
+                    cartTitle.innerText = 'Sell Cart';
+                    cartOverlay.classList.add('open');
+                    loadCartItems('sell');
+                });
+            }
+
+            // Close the Cart
+            closeCartBtn.addEventListener('click', () => {
+                cartOverlay.classList.remove('open');
+            });
+
+             // Function to load cart items dynamically
+            function loadCartItems(cartType) {
+                fetch(`/get-cart-items/?cart_type=${cartType}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const cartItemsContainer = document.querySelector('.cart-items');
+                        const cartFooter = document.querySelector('.cart-footer');
+    
+                        // Clear existing items
+                        cartItemsContainer.innerHTML = '';
+    
+                        if (data.items && data.items.length > 0) {
+                            data.items.forEach(item => {
+                                const itemHTML = `
+                                    <div class="cart-item">
+                                        <img src="${item.image_url}" alt="${item.name}">
+                                        <div class="item-details">
+                                            <p>${item.name}</p>
+                                            <p>${item.quantity} x MMK ${item.price}</p>
+                                        </div>
+                                        <div class="quantity-controls">
+                                            <button class="decrease-quantity" data-item-id="${item.id}">-</button>
+                                            <span>${item.quantity}</span>
+                                            <button class="increase-quantity" data-item-id="${item.id}">+</button>
+                                        </div>
+                                        <div class="item-total">MMK ${item.quantity * item.price}</div>
+                                        <button class="remove-item" data-item-id="${item.id}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                `;
+                                cartItemsContainer.innerHTML += itemHTML;
+                            });
+                            cartFooter.innerHTML = `
+                            <p>Total: MMK ${data.total}</p>
+                            <button class="checkout-btn" onclick="checkout()">Check Out</button>
+                        `;
+
+                        } else {
+                            cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+                            cartFooter.innerHTML = '';
+                        }
+    
+                        // Attach event listeners to the new buttons
+                        attachCartEventListeners(cartType);
+                    })
+                    .catch(error => console.error('Error loading cart items:', error));
+            }
+            window.checkout = function () {
+                const cartType = document.getElementById("cart-title").innerText.includes("Sell") ? "sell" : "buy";
+            
+                // Fetch cart details
+                fetch(`/get-cart-items/?cart_type=${cartType}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (cartType === "sell" && data.total <= 30000) {
+                            alert("No available for transformation. The amount might be above 30000 MMK.");
+                        } else {
+                            window.location.href = cartType === "buy" ? "/buy/ShippingInfo/" : "/sell/LocationTracker/";
+                        }
+                    })
+                    .catch(error => console.error("Error fetching cart data:", error)); // ✅ FIXED SYNTAX ERROR
+            };
+            
+           
+            // Attach event listeners for increase, decrease, and remove buttons
+            function attachCartEventListeners(cartType) {
+                document.querySelectorAll('.increase-quantity').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const itemId = button.getAttribute('data-item-id');
+                        updateCartItem(itemId, 'increase', cartType);
+                    });
+                });
+
+                document.querySelectorAll('.decrease-quantity').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const itemId = button.getAttribute('data-item-id');
+                        updateCartItem(itemId, 'decrease', cartType);
+                    });
+                });
+
+                document.querySelectorAll('.remove-item').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const itemId = button.getAttribute('data-item-id');
+                        updateCartItem(itemId, 'remove', cartType);
+                    });
+                });
+            }
+
+            // Update cart item quantity or remove it
+            function updateCartItem(itemId, action, cartType) {
+                fetch(`/update-cart-item/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({ item_id: itemId, action: action, cart_type: cartType }),
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Reload the cart items dynamically
+                            loadCartItems(cartType);
+                        } else {
+                            console.error('Error updating cart item:', data.error);
+                        }
+                    })
+                    .catch(error => console.error('Error updating cart item:', error));
+            }
+        });
+    </script>
+    
+
+</body>
+
+</html>

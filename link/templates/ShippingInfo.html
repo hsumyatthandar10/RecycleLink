@@ -1,0 +1,206 @@
+{% extends 'footer.html' %}
+
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #E8F5E9;
+        }
+
+        .center-content {
+            text-align: center;
+            margin-top: 5px; /* Optional: Adds some space at the top */
+        }
+
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+            gap: 30px;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            min-height: 50vh; /* Ensure the container takes the full viewport height */
+            box-sizing: border-box; /* Include padding in the height */
+        }
+        
+
+        .form-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            border-color: #009c24;
+            outline: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start; /* Align items to the top-left */
+            gap: 8px; /* Add spacing between the checkbox and label */
+        }
+    
+        .checkbox-group input[type="checkbox"] {
+            margin: 0; /* Reset margin for proper alignment */
+            padding: 0;
+            width: auto; /* Ensure the checkbox retains its default size */
+            height: auto;
+        }
+    
+        .checkbox-group label {
+            line-height: 1.2; /* Adjust the label's line height for better alignment */
+        }
+
+        .form-container button {
+            background-color: #E8F5E9;
+            color: #008115;
+            border: 1px solid #008115;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-container button:hover {
+            background-color: #008115;
+            color: white;
+        }
+
+        .map-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 600px;
+            height: 400px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container {
+            position: relative; /* Allow the button to be positioned at the bottom */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+    
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0; /* Add spacing above the button */
+        }
+    
+        .progress-indicator {
+            width: 50px;
+            height: 10px;
+            border-radius: 20px;
+        }
+    
+        .progress-indicator.active {
+            background-color: #009c24; /* Active progress indicator color */
+        }
+    
+        .progress-indicator.inactive {
+            background-color: #ffffff; /* Inactive progress indicator color */
+            border: 1px solid #000; /* Border for the inactive indicator */
+        }
+    
+        .form-container button {
+            width: 100%; /* Full width */
+            padding: 15px 0; /* Add more height */
+            font-size: 18px; /* Increase font size */
+            font-weight: bold; /* Make text bold */
+            text-align: center; /* Center-align text */
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div class="main-container">
+        <div class="form-container">
+            <div class="center-content">
+                <h2>Enter Shipping Information</h2>
+                <p>Fill out the address to get an estimated delivery date</p>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label for="first-name">First name</label>
+                    <input type="text" id="first-name" placeholder="First name">
+                </div>
+                <div class="form-group">
+                    <label for="last-name">Last name</label>
+                    <input type="text" id="last-name" placeholder="Last name">
+                </div>
+                <div class="form-group">
+                    <label for="phone-number">Phone number</label>
+                    <input type="tel" id="phone-number" placeholder="+95 0-0000-0000">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" placeholder="MIIT, 73rd, 107 + Ngu Shwe Wah Street, Mandalay">
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="save-address">
+                    <label for="save-address">Use this as future shipping address.</label>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Proceed to payment info ➔</button>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-indicator active"></div>
+                    <div class="progress-indicator active"></div>
+                    <div class="progress-indicator inactive"></div>
+                </div>
+            </form>
+        </div>
+
+        <div class="map-container" id="map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d75813.2120796085!2d96.03901824373015!3d21.942443406457457!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30cb6d23f0d27411%3A0x24146be01e4e5646!2sMandalay!5e0!3m2!1sen!2smm!4v1735551336253!5m2!1sen!2smm" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        </div>
+    </div>
+    
+</body>
+</html>
+{% endblock %}

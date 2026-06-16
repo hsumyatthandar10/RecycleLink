@@ -1,0 +1,348 @@
+{% extends 'footer.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet" />
+    <title>RecycleLink - Sign Up</title>
+    <style>
+        :root {
+            --primary: #E2DEA8;
+            --black: #000000;
+            --green: #213F1B;
+            --white: #FFFF;
+            --pgreen: #63E88D;
+            --linecolor: #B39B24;
+            --bgcolor: #E8F5E9;
+            --grey: #555;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8f4;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px auto;
+            padding: 20px;
+            max-width: 1400px;
+            gap: 30px;
+            color: #008115;
+        }
+
+
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+            font-size: 20px;
+        }
+
+        .feature-list li {
+            margin: 20px 0;
+            color: #000000;
+        }
+
+        .feature-list li::before {
+            content: '\2713';
+            margin-right: 10px;
+            color: var(--pgreen);
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            border: 4px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            color: #6D4C41;
+            margin-top: 80px;
+        }
+
+        .form {
+            margin: 20px;
+        }
+
+        .form-section h2 {
+            margin-bottom: 20px;
+            color: #008115;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 50px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #008115;
+            border-radius: 3px;
+        }
+
+        .terms-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terms-row input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+
+        .button {
+            background-color: #04AA6D;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #006c4d;
+            transform: scale(1.05);
+            color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .phone-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .phone-input select,
+        .phone-input input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .phone-input select {
+            max-width: 100px;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-container .toggle-password {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            top: 35px;
+        }
+
+        .messages {
+            margin: 20px 0;
+            margin-top: 100px;
+        }
+
+        .alert {
+            position: relative;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #d4edda;
+            /* Example for success message */
+            border-color: #c3e6cb;
+        }
+
+        .alert.success {
+            color: #155724;
+        }
+
+        .alert.error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .alert .message-text {
+            flex: 1;
+        }
+
+        .close-btn {
+            color: #000;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 15px;
+            /* Add spacing between the text and the cross icon */
+            line-height: 1;
+        }
+        @media (max-width: 1068px){
+           
+           .container{
+            flex-direction: column;
+           
+           }
+            .sign{
+                margin-top: 50px;
+            }
+            
+        }
+      
+        @media (max-width: 992px) {
+            .form-section {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            <span class="message-text">{{ message }}</span>
+            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+    <div class="container">
+        <div class="sign">
+            <h1>Sign up and start saving your time today!</h1>
+            <ul class="feature-list">
+                <li>Track your recycling impact with ease!</li>
+                <li>Post, buy, and sell recyclable materials today.</li>
+                <li>Earn rewards while helping the planet!</li>
+                <li>Easily exchange recyclable materials with trusted buyers and sellers near you!</li>
+                <li>Find recycling opportunities in your location and contribute to a cleaner community.</li>
+            </ul>
+        </div>
+        <div class="form-section">
+            <h2>Sign up now</h2>
+            <form class="form" method="post" action="{% url 'signup' %}">
+                {% csrf_token %}
+                <div class="form-row4">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" style="width: 100%;" placeholder="Enter your username" required>
+                    </div>
+
+                </div>
+                <div class="form-group email">
+                    <label for="email">Email address</label>
+                    <input type="email" class="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone number</label>
+                    <div class="phone-input">
+                        <select id="country-code" name="country_code">
+                            <option value="+1">🇺🇸 (+1)</option>
+                            <option value="+91">🇮🇳 (+91)</option>
+                            <option value="+44">🇬🇧 (+44)</option>
+                            <option value="+95">🇲🇲 (+95)</option>
+                          </select>
+                        <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
+                    </div>
+                </div>
+                <div class="form-group password-container">
+                    <label for="password"><b>Password</b></label>
+                    <input type="password" id="password" name="password" placeholder="Type Your Password" required>
+                    <i class="fas fa-eye toggle-password" onclick="togglePassword()"></i>
+                </div>
+                <p id="password-error" class="password-error" style="display:none;">Password must be at least 6
+                    characters.</p>
+                <div class="terms-row">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        By creating an account, I agree to the
+                        <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+                    </label>
+                </div>
+                <div class="terms-row">
+                    <input type="checkbox" id="marketing" name="marketing">
+                    <label for="marketing">
+                        I consent to receive site messages and emails,
+                        including product news, updates, events, and marketing promotions.
+                    </label>
+                </div>
+                <div class="actionss">
+                    <button type="submit" class="button">Sign up</button>
+                    <p class="login-link">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const togglePasswordIcon = document.querySelector('.toggle-password');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                togglePasswordIcon.classList.remove('fa-eye');
+                togglePasswordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                togglePasswordIcon.classList.remove('fa-eye-slash');
+                togglePasswordIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const closeBtns = document.querySelectorAll('.close-btn');
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const alert = this.parentElement;
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.style.display = 'none', 300);
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
+{% endblock %}

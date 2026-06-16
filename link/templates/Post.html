@@ -1,0 +1,263 @@
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(171, 151, 151);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .post-container {
+            width: 600px;
+
+            background: white;
+            box-shadow: 6px 6px 20px rgb(11, 11, 11);
+            border-radius: 20px;
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .profile-section img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .post-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 14px;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+            max-width: 100%;
+            overflow-x: auto;
+            justify-content: center;
+        }
+
+        .image-preview {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .delete-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 25px;
+            cursor: pointer;
+
+        }
+
+        .post-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            bottom: 180px;
+            background: white;
+            padding: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .emoji-picker span {
+            cursor: pointer;
+            font-size: 20px;
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="post-container">
+        <span class="close-button" onclick="window.location.href='{% url 'profile' %}'">&times;</span>
+        <div class="post-header">
+            <h2>Create post</h2>
+            <label><input type="checkbox" id="anonymous"></label>
+        </div>
+
+        <div class="profile-section">
+            <img id="postProfilePhoto" src="{% static 'img/profile.jpg' %}" alt="Profile">
+            <span>{{ user.username }}</span>
+        </div>
+
+        <textarea class="post-input" id="postText" placeholder="Write something..."
+            oninput="togglePostButton()"></textarea>
+        <div class="image-preview-container" id="imagePreviewContainer"></div>
+
+        <div class="post-footer">
+            <div class="actions">
+                <span onclick="document.getElementById('imageUpload').click()" style="cursor: pointer; font-size:20px; padding-right: 20px">🌅</span>
+                <span onclick="toggleEmojiPicker()" style="cursor: pointer; font-size: 20px; padding-right: 20px;">😀</span>
+            </div>
+            <button class="post-button" onclick="submitPost()" disabled>Post</button>
+        </div>
+        <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="previewImages(event)">
+    </div>
+
+
+    <div class="emoji-picker" id="emojiPicker">
+        <span onclick="insertEmoji('😀')">😀</span>
+        <span onclick="insertEmoji('😂')">😂</span>
+        <span onclick="insertEmoji('😍')">😍</span>
+        <span onclick="insertEmoji('😎')">😎</span>
+        <span onclick="insertEmoji('😢')">😢</span>
+        <span onclick="insertEmoji('❤️')">❤️</span>
+        <span onclick="insertEmoji('👍')">👍</span>
+        <span onclick="insertEmoji('😡')">😡</span>
+
+    </div>
+    </div>
+
+    <script>
+        function previewImages(event) {
+            const files = event.target.files;
+            const container = document.getElementById("imagePreviewContainer");
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imageWrapper = document.createElement("div");
+                    imageWrapper.className = "image-preview";
+
+                    const imgElement = document.createElement("img");
+                    imgElement.src = e.target.result;
+
+                    const deleteBtn = document.createElement("span");
+                    deleteBtn.className = "delete-image";
+                    deleteBtn.innerHTML = "&times;";
+                    deleteBtn.onclick = function () {
+                        container.removeChild(imageWrapper);
+                    };
+
+                    imageWrapper.appendChild(imgElement);
+                    imageWrapper.appendChild(deleteBtn);
+                    container.appendChild(imageWrapper);
+                }
+                reader.readAsDataURL(files[i]);
+            }
+        }
+
+        function removeImage() {
+            document.getElementById('previewImage').src = '';
+            document.getElementById('previewImageContainer').style.display = 'none';
+        }
+
+        function togglePostButton() {
+            const postText = document.getElementById("postText").value;
+            document.querySelector(".post-button").disabled = postText.trim() === "";
+        }
+        function toggleEmojiPicker() {
+            const picker = document.getElementById("emojiPicker");
+            picker.style.display = picker.style.display === "block" ? "none" : "block";
+        }
+
+        function insertEmoji(emoji) {
+            document.getElementById("postText").value += emoji;
+            togglePostButton();
+        }
+        window.onload = function() {
+    const savedPhoto = localStorage.getItem("profilePhoto_" + "{{ user.username }}");
+
+    if (savedPhoto) {
+        document.getElementById("postProfilePhoto").src = savedPhoto;
+    }
+};
+
+function submitPost() {
+    const postText = document.getElementById("postText").value;
+    const images = document.querySelectorAll(".image-preview img");
+    const imageArray = [];
+    images.forEach(img => imageArray.push(img.src));
+    const isAnonymous = document.getElementById("anonymous").checked;
+
+    if (!postText.trim()) return; // Prevent empty posts
+
+    // Retrieve existing posts from localStorage
+    let userPosts = JSON.parse(localStorage.getItem("posts_" + "{{ user.username }}")) || [];
+    
+    const newPost = {
+        text: postText,
+        images: imageArray,
+        anonymous: isAnonymous,
+        timestamp: Date.now() // Add timestamp to maintain order
+    };
+
+    userPosts.push(newPost);
+    localStorage.setItem("posts_" + "{{ user.username }}", JSON.stringify(userPosts));
+
+    // Sync with all posts
+    let allPosts = JSON.parse(localStorage.getItem("allPosts")) || [];
+    allPosts.push({ ...newPost, username: "{{ user.username }}", profilePhoto: localStorage.getItem("profilePhoto_" + "{{ user.username }}") || "{% static 'img/profile.jpg' %}" });
+    localStorage.setItem("allPosts", JSON.stringify(allPosts));
+
+    window.location.href = "{% url 'profile' %}"; // Redirect to profile
+}
+
+
+    </script>
+</body>
+
+</html>
+{% endblock %}

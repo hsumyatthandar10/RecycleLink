@@ -1,0 +1,202 @@
+{% extends 'footer.html' %}
+
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8f4;
+            margin-top: 80px;
+            padding: 0;
+        }
+
+        .wishlist-container {
+            width: 600px; /* Fixed width */
+            height: 500px; /* Fixed height */
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden; /* Prevents overflow from affecting layout */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wishlist-header {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .wishlist-section {
+            flex-grow: 1; /* Allows sections to take available space */
+            margin-bottom: 20px;
+            overflow-y: auto; /* Enables vertical scrolling */
+            max-height: 250px; /* Controls max height for scrolling */
+            padding-right: 10px; /* Prevents content from hitting the scrollbar */
+        }
+
+        /* Scrollbar styling */
+        .wishlist-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .wishlist-section::-webkit-scrollbar-thumb {
+            background:rgb(196, 225, 191);
+            border-radius: 4px;
+        }
+
+        .wishlist-section::-webkit-scrollbar-track {
+            background: #f5f5f5;
+        }
+
+        .wishlist-section h3 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .wishlist-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .wishlist-item .details {
+            flex-grow: 1;
+        }
+
+        .wishlist-item .details p {
+            margin: 0;
+        }
+
+        .wishlist-item .actions button {
+            background:rgb(232, 0, 0);
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .wishlist-item .actions button:hover {
+            background:rgb(151, 9, 9);
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="wishlist-container">
+        <div class="wishlist-header">
+            <h2>My Wishlist</h2>
+        </div>
+
+        <!-- Sell Wishlist Section -->
+        <h3>📦 Sell Wishlist</h3>
+        <div class="wishlist-section">
+            
+            {% if sell_wishlist_items %}
+                {% for item in sell_wishlist_items %}
+                <div class="wishlist-item" id="wishlist-item-{{ item.id }}">
+                    <img src="{{ item.product_sell.main_image.url }}" alt="{{ item.product_sell.name }}">
+                    <div class="details">
+                        <p><strong>{{ item.product_sell.name }}</strong></p>
+                        <p>Price: {{ item.product_sell.get_price }}</p>
+                    </div>
+                    <div class="actions">
+                        <button onclick="removeWishlistItem('{{ item.id }}')">Remove</button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>You have no items in your Sell Wishlist.</p>
+            {% endif %}
+        </div>
+
+        <!-- Buy Wishlist Section -->
+        <h3>🛍 Buy Wishlist</h3>
+        <div class="wishlist-section">
+            
+            {% if buy_wishlist_items %}
+                {% for item in buy_wishlist_items %}
+                <div class="wishlist-item" id="wishlist-item-{{ item.id }}">
+                    <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}">
+                    <div class="details">
+                        <p><strong>{{ item.product.name }}</strong></p>
+                        <p>Price: {{ item.product.get_price }}</p>
+                    </div>
+                    <div class="actions">
+                        <button onclick="removeWishlistItem('{{ item.id }}')">Remove</button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>You have no items in your Buy Wishlist.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script>
+        // Function to fetch the CSRF token from the meta tag
+        function getCSRFToken() {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        }
+
+        // Wishlist removal logic
+        function removeWishlistItem(itemId) {
+            fetch(`/wishlist/remove/${itemId}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken(),
+                },
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Failed to remove wishlist item.");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.success) {
+                        const wishlistItem = document.getElementById(`wishlist-item-${itemId}`);
+                        if (wishlistItem) wishlistItem.remove();
+                        
+                        // Check if sections are empty and update message
+                        if (!document.querySelector(".wishlist-section .wishlist-item")) {
+                            document.querySelector(".wishlist-container").innerHTML = "<p>You have no items in your wishlist.</p>";
+                        }
+                    } else {
+                        alert(data.error || "Failed to remove item.");
+                    }
+                })
+                .catch((error) => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,229 @@
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a review</title>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(171, 151, 151);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+    .review-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+}
+
+.review-box {
+    background: #1a1a1a;
+    color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+}
+
+.stars {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.star {
+    font-size: 30px;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.star.active {
+    color: gold;
+}
+
+#rating-text {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+textarea {
+    width: 100%;
+    height: 60px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 4px;
+    resize: none;
+}
+
+.post-btn {
+    width: 100%;
+    background: #444;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.post-btn:hover {
+    background: gold;
+    color: black;
+}
+.go-aboutus-btn {
+        position: fixed;
+        top: 90px;
+        left: 20px;
+        padding: 10px 15px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: rgb(192, 155, 155);
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+      .go-aboutus-btn:hover {
+        background-color: rgba(30, 33, 105, 0.9);
+      }
+    </style>
+</head>
+
+<body>
+    <a href="{% url 'aboutus' %}" class="go-aboutus-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+    <div class="review-container">
+        <div class="review-box">
+            <div class="stars">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <p id="rating-text">It is awesome 😄</p>
+            
+            <form id="reviewForm" data-aboutus-url="{% url 'aboutus' %}">
+
+                {% csrf_token %}
+                <input type="hidden" id="rating" name="rating" value="3">  <!-- Default rating -->
+                
+                <textarea id="review_text" name="review_text" placeholder="Describe your experience." required></textarea>
+    
+                <button type="submit" class="post-btn">POST</button>
+            </form>
+        </div>
+    </div>
+    <div class="reviews-grid"></div>
+
+
+   
+
+</body>
+<script>
+    localStorage.setItem("username", "loggedInUserName"); // Store the username after login
+    
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll(".star");
+        const ratingInput = document.getElementById("rating");
+        const ratingText = document.getElementById("rating-text");
+        const reviewForm = document.getElementById("reviewForm");
+        const reviewTextArea = document.getElementById("review_text");
+    
+        const messages = {
+            1: "Terrible 😞",
+            2: "Not great 😕",
+            3: "It is awesome 😄",
+            4: "Really good 😃",
+            5: "Excellent 🤩"
+        };
+    
+        // ✅ Get current username
+        // ✅ Function to get logged-in user's name (Replace with real authentication)
+        function getCurrentUsername() {
+            return localStorage.getItem("username"); // Fetch the username from authentication
+        }
+    
+        // ✅ Get user profile photo (corrected)
+        function getProfilePhoto(username) {
+            let storedPhoto = localStorage.getItem("profilePhoto_" + username);
+            return storedPhoto && storedPhoto !== "null" ? storedPhoto : "/static/img/profile.jpg"; // Default photo if not set
+        }
+    
+        // ⭐ Handle star selection
+        stars.forEach(star => {
+            star.addEventListener("click", function () {
+                const value = parseInt(this.getAttribute("data-value"));
+                ratingInput.value = value;
+    
+                stars.forEach(s => s.classList.remove("active"));
+                for (let i = 0; i < value; i++) {
+                    stars[i].classList.add("active");
+                }
+    
+                ratingText.innerText = messages[value];
+            });
+        });
+    
+        // 📝 Handle review submission
+        reviewForm.addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent page reload
+    
+            const username = getCurrentUsername();
+            const userImage = getProfilePhoto(username); // Get the user's profile image
+    
+            if (!username) {
+                alert("You must be logged in to submit a review.");
+                return;
+            }
+    
+            const newReview = {
+                id: Date.now(),
+                rating: parseInt(ratingInput.value),
+                text: reviewTextArea.value.trim(),
+                author: username,
+                image: userImage
+            };
+    
+            if (!newReview.text) {
+                alert("Review cannot be empty!");
+                return;
+            }
+    
+            // Store review in localStorage
+            let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+            reviews.unshift(newReview); // Add new review to the top
+            localStorage.setItem("reviews", JSON.stringify(reviews));
+    
+            // ✅ Get About Us URL from the HTML (Django-safe)
+            const aboutUsURL = document.getElementById("reviewForm").getAttribute("data-aboutus-url");
+            window.location.href = aboutUsURL; // Redirect after submitting
+        });
+    });
+    
+    
+    </script>
+    
+   
+
+</html>
+{% endblock %}
